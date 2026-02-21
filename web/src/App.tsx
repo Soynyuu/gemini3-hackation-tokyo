@@ -489,7 +489,7 @@ function Game() {
               <div className="text-xs md:text-sm font-mono text-cyan-500/80 uppercase tracking-widest mb-1 md:mb-2 z-10">構造一致</div>
               <div className="text-4xl md:text-5xl font-black text-white tracking-tighter z-10">{scores.structureScore}<span className="text-xl md:text-2xl text-cyber-muted">%</span></div>
             </div>
-          )
+          )}
 
           <div className={`col-span-2 lg:col-span-1 p-4 md:p-6 rounded-xl border bg-cyber-surface/60 text-center relative overflow-hidden transition-all duration-700 ${aiEvalResult ? grade.border + ' ' + grade.glow : 'border-cyber-border'}`}>
             {isEvaluating && (
