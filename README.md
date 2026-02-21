@@ -16,52 +16,80 @@ People can often tell when something "feels right" but cannot precisely describe
 - Humans remain the best judges of subjective qualities. If LLMs can externalize their internal "intent" into a medium humans can inspect, humans can select/refine without needing to translate to exact wording.
 - This enables new workflows: LLMs propose, humans curate.
 
-## Candidate mediums (prioritized)
-1. Physical tokens (stackable blocks / colored tiles)
-   - Pros: tangible, haptic feedback, good for public demos
-   - Cons: logistic overhead, manufacturing
-2. Visual boards (arrangements of shapes, colors, spacing)
-   - Pros: easy to render, programmatic, supports rapid iteration
-   - Cons: less haptic
-3. Card decks with abstract attributes (cards map to attribute vectors)
-   - Pros: low-fidelity, great for playtesting and rules games
-4. Dynamic lighting/audio patterns (temporal dimension)
-   - Pros: expressive for mood; good for immersive prototypes
-   - Cons: needs hardware
+## Chosen medium: Voxels (3D digital blocks)
+
+We pivot to a voxel-based medium — a small 3D grid of colored blocks — as the canonical canvas for LLM→Human Vibe transfer. Voxels hit the sweet spot: visually expressive, structurally simple (a 3D array), and easy to compare mathematically against a hidden "ground-truth" voxel arrangement the LLM holds.
+
+Why voxels?
+- Visual + tactile feel: arrangements read as shapes, silhouettes, and negative space that humans judge quickly.
+- Structured: represented as a 3D array of cells `V[x][y][z]` with simple attributes (presence, color, emissive flag), which lets the LLM compute exact structural differences.
+- Fast to iterate: small grids (e.g., 5x5x5) keep a 2–3 minute play window realistic while still offering diverse forms.
+
+Core constraints for hackathon MVP:
+- Grid size: 5x5x5 (125 cells) — small and fast.
+- Voxel attributes: `pos: [x,y,z]`, `color: #RRGGBB`, `type: [standard|emissive|transparent]`.
+- Deterministic rendering: viewer displays colors and simple lighting consistently to make visual comparisons repeatable.
 
 ## Representation & structure
-- Define a low-dimensional vibe vector (e.g., 6–8 axes): warmth, contrast, tempo, randomness, density, openness, saturation, focus.
-- Each axis has a small discrete set (e.g., 5 levels) so LLM outputs can be tokenized.
-- Map vector slices to medium specifics:
-  - For blocks: color = saturation, height = density, spacing = openness, tilt = randomness
-  - For board: layout grid with color/value per cell
+- Vibe vector: keep a compact, low-dimensional descriptor (6 axes) that the LLM outputs alongside or instead of a full voxel plan. Example axes: `warmth`, `density`, `focus`, `randomness`, `saturation`, `verticality`.
+- Discretize each axis to 5 levels (0–4) so the LLM can reliably output tokenized values.
+- Mapping to voxels: the system converts a vibe vector into pixel-level modifications or a suggested voxel plan:
+  - `warmth` → color temperature mapping (cool blues → warm reds)
+  - `density` → fraction of occupied cells in a bounding volume
+  - `focus` → center-of-mass weighting vs. edge scattering
+  - `randomness` → noise in placement (Perlin/simple RNG)
+  - `saturation` → color intensity / presence of emissive voxels
+  - `verticality` → preference for height vs. spread
 
-## Interaction loop
-1. LLM generates a vibe vector or artifact description.
-2. System renders artifact (visual/physical instructions) and presents to human player.
-3. Human gives feedback: binary accept/reject, scalar rating, or edits (move tiles, swap cards).
-4. LLM ingests feedback and proposes a refinement (new vector/artifact).
+This two-tier design (vector + voxels) keeps prompts compact while allowing exact structural comparison.
 
-## Evaluation & Ground Truth
-- Use pairwise comparison: humans choose between LLM output and target sample.
-- Use reconstruction accuracy: can a human reproduce the target vibe when given LLM output as guidance?
-- Measure convergence speed: how many refine cycles until human is satisfied?
+## Game loop — Vibe Architect (2–3 minutes)
+1) Hidden goal generation (0–20s): the LLM samples a hidden voxel plan (the "director's ideal") and produces a short abstract Vibe prompt and optionally an Imagen-style inspiration image.
+2) Build phase (20–140s): the player has ~2 minutes to assemble a voxel sculpture on a 5x5x5 grid guided only by the Vibe prompt / inspiration image. During play the LLM can stream JSON feedback periodically (every 5–10s) with short comments.
+3) Finalize (140–180s): the player submits. The system computes:
+   - Structure score: exact coordinate matches / Jaccard similarity between voxel occupancy sets.
+   - Vibe score: Gemini Vision evaluates the screenshot vs. the Vibe prompt and returns a qualitative/quantitative rating.
+4) Reveal: display the hidden director plan, the player's sculpture, scores, and the LLM's commentary.
 
-## Prototype ideas (MVPs)
-1. Tile Board (digital)
-   - 8x8 grid, each tile has color and blur amount. LLM outputs a 6‑axis vector → mapped to tile parameters.
-   - Humans click/drag to adjust; feedback sent back for refinement.
-2. Card Game (physical/digital)
-   - LLM deals a hand of attribute cards; players assemble a layout to match a sample vibe.
-   - Easy for playtesting mechanics.
-3. Haptic Blocks (demo)
-   - 10 blocks with distinct colors/textures. LLM prescribes stack/arrangement to signal vibe.
+Players can then replay quickly with a different Vibe or director personality.
+
+## Scoring & evaluation
+- Structural score: compute voxel-set similarity (intersection / union) and weight matches by `type` and `color` similarity. Report as percentage.
+- Vibe score: use Gemini Pro Vision to score how well the player's screenshot matches the abstract Vibe prompt (0–100) and return JSON with `score`, `rationale`, and `salient_features`.
+- Combined score: weighted sum (e.g., 0.6 structure + 0.4 vibe) for a final ranking.
+
+For experiments, track convergence (# of builds to reach threshold), and inter-rater agreement when multiple humans judge the same Vibe.
+
+## MVP plan — what we'll build for the hackathon
+1) Web voxel builder (`/web/voxel-board`)
+   - A lightweight Three.js or React + canvas UI with a 5x5x5 editable grid, color picker, quick-fill tools (pour, pillar, scatter).
+   - Export/import JSON for `voxels` and `vibe_vector`.
+2) LLM integration
+   - Director agent: outputs hidden `director_plan` (voxel JSON), `vibe_prompt` (text), and optional `imagen_prompt` for an inspiration image.
+   - Live feedback: use structured JSON responses from Gemini for periodic hints and emotional commentary.
+3) Scoring & reveal
+   - Compute structural and vibe scores server-side; show side-by-side reveal and LLM commentary.
+
+Keep the first demo local and offline-capable (mock LLM outputs) so we can iterate without API limits, then switch to Gemini endpoints for the final demo.
 
 ## Implementation notes
-- LLM prompt design: request a structured JSON output with named axes and discrete levels.
-- Start with a deterministic mapping from vector→rendering to keep evaluation consistent.
-- Build a small web UI for rapid iteration (React with simple canvas/grid).
-- Optionally add simple physical output via a CNC/3D printed tokens set later.
+- Data structures (hackathon-ready JSON):
+
+```json
+{
+  "grid_size": [5,5,5],
+  "voxels": [
+    {"pos":[0,0,1], "color":"#FF3B30", "type":"emissive"},
+    {"pos":[1,2,0], "color":"#0A84FF", "type":"standard"}
+  ],
+  "vibe_vector": {"warmth":3, "density":2, "focus":4, "randomness":1, "saturation":3, "verticality":2},
+  "vibe_prompt":"Faint morning glow over an isolated tower"
+}
+```
+
+- LLM outputs should use `response_mime_type: "application/json"` and conform to a simple schema: `director_plan`, `vibe_vector`, `vibe_prompt`, `imagen_prompt` (optional), and periodic `feedback` blobs.
+- Rendering: keep lighting neutral and deterministic; use an orthographic camera for fair screen-space comparisons.
+- Local-first dev: implement a mock director generator and an offline-scoring function so we can demo without external APIs.
 
 ## Next steps (MVP roadmap)
 1. Finalize 6–8 vibe axes and discrete levels.
