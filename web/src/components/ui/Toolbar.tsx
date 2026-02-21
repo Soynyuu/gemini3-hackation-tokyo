@@ -2,14 +2,14 @@ import type { VoxelType } from '../../store/types';
 import { Box, Sparkles, Droplets } from 'lucide-react';
 
 const COLORS = [
-    '#FF3B30', // Red
-    '#0A84FF', // Blue
-    '#30D158', // Green
-    '#FF9F0A', // Orange
-    '#BF5AF2', // Purple
-    '#FFD60A', // Yellow
-    '#E0F0FF', // White/Cyan
-    '#1E2D3D', // Dark
+    '#EF4444', // Red 500
+    '#F97316', // Orange 500
+    '#F59E0B', // Amber 500
+    '#10B981', // Emerald 500
+    '#3B82F6', // Blue 500
+    '#8B5CF6', // Violet 500
+    '#EC4899', // Pink 500
+    '#F8FAFC', // Slate 50
 ];
 
 interface ToolbarProps {

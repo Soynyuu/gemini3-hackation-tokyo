@@ -8,14 +8,14 @@ export default {
     extend: {
       colors: {
         cyber: {
-          background: '#050A0F',
-          surface: '#0A121A',
-          border: '#1E2D3D',
-          primary: '#00FFAA',
-          secondary: '#7000FF',
-          accent: '#FF0055',
-          text: '#E0F0FF',
-          muted: '#6A8A9E'
+          background: '#09090E',
+          surface: '#12121A',
+          border: '#2A2A3A',
+          primary: '#4F8AFF',
+          secondary: '#A855F7',
+          accent: '#F43F5E',
+          text: '#F8FAFC',
+          muted: '#94A3B8'
         }
       },
       fontFamily: {

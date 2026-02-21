@@ -38,7 +38,7 @@ function useHashRoute(): [Route, (r: Route) => void] {
 function Game() {
   const { phase, setPhase, setDirectorPlan, setTimeRemaining, directorPlan, playerVoxels, apiKey } = useGameStore();
 
-  const [activeColor, setActiveColor] = useState('#FF3B30');
+  const [activeColor, setActiveColor] = useState('#EF4444');
   const [activeType, setActiveType] = useState<VoxelType>('standard');
   const [activeLayer, setActiveLayer] = useState(0);
   const [isGenerating, setIsGenerating] = useState(false);
@@ -94,11 +94,10 @@ function Game() {
               <button
                 key={opt.value}
                 onClick={() => setDifficulty(opt.value)}
-                className={`px-2 md:px-3 py-2 md:py-3 rounded border text-sm font-mono transition-all ${
-                  difficulty === opt.value
+                className={`px-2 md:px-3 py-2 md:py-3 rounded border text-sm font-mono transition-all ${difficulty === opt.value
                     ? 'border-cyber-primary bg-cyber-primary/20 text-cyber-primary'
                     : 'border-cyber-border bg-cyber-surface/50 text-cyber-muted hover:border-cyber-muted'
-                }`}
+                  }`}
               >
                 <div className="font-bold text-sm md:text-base">{opt.label}</div>
                 <div className="text-[10px] mt-1 opacity-70">{opt.description}</div>
