@@ -47,3 +47,8 @@
   stroke-dashoffset: 48;
   animation: dash 1.5s linear infinite;
 }
+
+@keyframes slideUp {
+  from { transform: translateY(100%); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}

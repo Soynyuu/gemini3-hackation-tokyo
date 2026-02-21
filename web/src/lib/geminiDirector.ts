@@ -111,7 +111,7 @@ const directorSchema: Schema = {
         },
         vibe_prompt: {
             type: Type.STRING,
-            description: "A short, poetic prompt in Japanese describing the vibe of the structure."
+            description: "構造のバイブを表す短い日本語の詩的なプロンプト。必ず日本語で出力すること。英語は不可。"
         },
         hint_svg: {
             type: Type.STRING,
@@ -144,6 +144,7 @@ export const generateGeminiDirectorPlan = async (
 
     OUTPUT FORMAT:
     - grid_size must be [5, 5, 5]
+    - vibe_prompt: MUST be in Japanese (日本語). Never output English for this field.
     - vibe_vector: rate each axis 0-4 based on the actual structure properties
     - hint_svg: a simple SVG silhouette of the structure from the front
     - hint_foundation: 1-5 starter blocks from the structure as a hint for the player

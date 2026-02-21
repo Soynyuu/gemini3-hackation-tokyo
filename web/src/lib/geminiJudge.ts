@@ -1,5 +1,6 @@
 import { GoogleGenAI, Type } from '@google/genai';
 import type { Schema } from '@google/genai';
+import type { ClientInterruption } from '../store/types';
 
 const evaluationSchema: Schema = {
     type: Type.OBJECT,
@@ -19,21 +20,37 @@ const evaluationSchema: Schema = {
 export const evaluateWithGemini = async (
     apiKey: string,
     base64Image: string,
-    vibePrompt: string
+    vibePrompt: string,
+    interruptionHistory?: ClientInterruption[],
 ): Promise<{ vibeScore: number; rationale: string }> => {
     const ai = new GoogleGenAI({ apiKey });
 
-    // Clean the base64 string (remove data:image/png;base64, prefix)
     const base64Data = base64Image.split(',')[1] || base64Image;
 
-    const prompt = `
-    You are an AI Architect judging a human's attempt to build a 3D structure that matches a specific "vibe".
-    The target vibe prompt was: "${vibePrompt}"
+    const hasInterruptions = interruptionHistory && interruptionHistory.length > 0;
 
-    Look at the provided image of their voxel structure.
-    Evaluate how well the shape, color usage, and overall aesthetic map to the target vibe.
-    Return a score (0-100) and a short feedback rationale in Japanese.
-  `;
+    const interruptionContext = hasInterruptions
+        ? `\n\n重要: ビルド中にクライアントが何度も仕様を変更しました。
+指示の変遷（最新が最も重要）:
+初期指示: 「${vibePrompt}」
+${interruptionHistory.map((i, idx) => `${idx + 1}. 「${i.message}」`).join('\n')}
+
+最新の指示を最重視しつつ、途中の変更に対応できていればボーナス評価してください。
+仕様変更が多い中での制作は困難なので、やや寛容に評価してください。`
+        : '';
+
+    const prompt = hasInterruptions
+        ? `あなたはAIアーキテクトとして、人間が作った3Dボクセル構造を評価します。
+これは「バイブコーディング」セッションで、気まぐれなクライアントが途中で仕様を変えまくりました。
+${interruptionContext}
+
+画像に写っているボクセル構造を見て、最終的な指示にどれだけ応えられたか評価してください。
+スコア (0-100) と短いフィードバック（日本語で1-2文）を返してください。`
+        : `あなたはAIアーキテクトとして、人間が作った3Dボクセル構造を評価します。
+目標のバイブ指示: 「${vibePrompt}」
+
+画像に写っているボクセル構造を見て、形・色使い・全体の雰囲気がお題にどれだけ合っているか評価してください。
+スコア (0-100) と短いフィードバック（日本語で1-2文）を返してください。`;
 
     try {
         const response = await ai.models.generateContent({
@@ -45,7 +62,7 @@ export const evaluateWithGemini = async (
             config: {
                 responseMimeType: "application/json",
                 responseSchema: evaluationSchema,
-                temperature: 0.2, // low temp for more consistent grading
+                temperature: 0.2,
             }
         });
 
@@ -60,7 +77,6 @@ export const evaluateWithGemini = async (
         };
     } catch (error) {
         console.error("Gemini Judge Error:", error);
-        // Fallback if API fails to prevent hard crashing the reveal screen
         return {
             vibeScore: 50,
             rationale: "AI審査官への接続に失敗しました。構造的特徴に基づく仮スコアを適用しています。"
