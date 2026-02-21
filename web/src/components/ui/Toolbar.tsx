@@ -38,21 +38,21 @@ export const Toolbar = ({ activeColor, setActiveColor, activeType, setActiveType
             <div className="flex gap-2">
                 <button
                     onClick={() => setActiveType('standard')}
-                    className={`p-2 rounded-lg transition-colors flex items-center gap-2 ${activeType === 'standard' ? 'bg-cyber-primary text-black' : 'text-cyber-muted hover:text-white'}`}
+                    className={`p-2 rounded-lg transition-colors flex items-center gap-2 ${activeType === 'standard' ? 'bg-cyber-primary text-black' : 'text-cyber-muted hover:text-cyber-text dark:hover:text-white'}`}
                 >
                     <Box size={18} />
                     <span className="text-sm font-bold uppercase tracking-wider hidden sm:inline">ソリッド</span>
                 </button>
                 <button
                     onClick={() => setActiveType('emissive')}
-                    className={`p-2 rounded-lg transition-colors flex items-center gap-2 ${activeType === 'emissive' ? 'bg-cyber-accent text-white' : 'text-cyber-muted hover:text-white'}`}
+                    className={`p-2 rounded-lg transition-colors flex items-center gap-2 ${activeType === 'emissive' ? 'bg-cyber-accent text-white' : 'text-cyber-muted hover:text-cyber-text dark:hover:text-white'}`}
                 >
                     <Sparkles size={18} />
                     <span className="text-sm font-bold uppercase tracking-wider hidden sm:inline">発光</span>
                 </button>
                 <button
                     onClick={() => setActiveType('transparent')}
-                    className={`p-2 rounded-lg transition-colors flex items-center gap-2 ${activeType === 'transparent' ? 'bg-cyber-secondary text-white' : 'text-cyber-muted hover:text-white'}`}
+                    className={`p-2 rounded-lg transition-colors flex items-center gap-2 ${activeType === 'transparent' ? 'bg-cyber-secondary text-white' : 'text-cyber-muted hover:text-cyber-text dark:hover:text-white'}`}
                 >
                     <Droplets size={18} />
                     <span className="text-sm font-bold uppercase tracking-wider hidden sm:inline">ガラス</span>
