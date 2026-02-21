@@ -21,7 +21,7 @@ const difficultyPrompts: Record<DifficultyLevel, string> = {
     - Blocks must be connected. Build from the ground up (y=0).
     - Use realistic colours (brown for wood, green for leaves, red for brick, etc.)
     - Use 15-35 blocks.
-    - The vibe_prompt should name the object poetically in Japanese (e.g. "森の奥にひっそり佇む小さな家")
+    - The vibe_prompt should name the object poetically in Japanese (e.g. "森の奥にひっそり佇む小さな家"). MANDATORY: MUST BE IN JAPANESE.
 
     Examples:
     - House: floor at y=0, walls y=1-2, triangular roof y=3
@@ -38,7 +38,7 @@ const difficultyPrompts: Record<DifficultyLevel, string> = {
     - Blocks must be connected. Build from ground up.
     - Use 15-35 blocks.
     - Use "emissive" blocks for dramatic effect.
-    - The vibe_prompt should describe the mood/style in Japanese (e.g. "夕焼けに染まる歪んだ灯台")`,
+    - The vibe_prompt should describe the mood/style in Japanese (e.g. "夕焼けに染まる歪んだ灯台"). MANDATORY: MUST BE IN JAPANESE.`,
 
     abstract: `
     You are an abstract voxel sculptor. Create a structure in a 5x5x5 grid that represents a concept or emotion.
@@ -51,7 +51,7 @@ const difficultyPrompts: Record<DifficultyLevel, string> = {
     - Blocks should mostly be connected but can have deliberate gaps.
     - Use 15-35 blocks.
     - Use colour and emissive/transparent types to reinforce the concept.
-    - The vibe_prompt should describe the feeling in Japanese without naming any object (e.g. "静寂の中に芽生える不安")`,
+    - The vibe_prompt should describe the feeling in Japanese without naming any object (e.g. "静寂の中に芽生える不安"). MANDATORY: MUST BE IN JAPANESE.`,
 
     vibe: `
     You are a voxel artist creating pure atmosphere. Create a structure in a 5x5x5 grid.
@@ -62,7 +62,7 @@ const difficultyPrompts: Record<DifficultyLevel, string> = {
     - The player will only see a short poetic text hint — they must interpret the vibe and build.
     - Focus on: density, verticality, warmth/coolness of colour, clustering vs scattering.
     - Use 10-30 blocks.
-    - The vibe_prompt should be a cryptic, poetic, synesthetic Japanese phrase (e.g. "水底から聞こえる光の残響")
+    - The vibe_prompt should be a cryptic, poetic, synesthetic Japanese phrase (e.g. "水底から聞こえる光の残響"). MANDATORY: MUST BE IN JAPANESE.
     - This is the hardest difficulty — the prompt should be evocative but deliberately ambiguous.`,
 };
 
@@ -147,6 +147,7 @@ export const generateGeminiDirectorPlan = async (
     - vibe_vector: rate each axis 0-4 based on the actual structure properties
     - hint_svg: a simple SVG silhouette of the structure from the front
     - hint_foundation: 1-5 starter blocks from the structure as a hint for the player
+    - IMPORTANT: The 'vibe_prompt' field MUST be in Japanese. No English allowed in this field.
     `;
 
     try {
