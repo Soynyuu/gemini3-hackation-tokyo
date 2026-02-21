@@ -22,6 +22,8 @@ export interface DirectorPlan {
     voxels: Voxel[];
     vibe_vector: VibeVector;
     vibe_prompt: string;
+    hint_svg?: string;
+    hint_foundation?: Voxel[];
 }
 
 export type GamePhase = 'title' | 'build' | 'reveal';

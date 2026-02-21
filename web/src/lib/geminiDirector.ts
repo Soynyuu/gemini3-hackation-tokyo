@@ -1,5 +1,6 @@
-import { GoogleGenAI, Type, Schema } from '@google/genai';
-import { DirectorPlan } from '../store/types';
+import { GoogleGenAI, Type } from '@google/genai';
+import type { Schema } from '@google/genai';
+import type { DirectorPlan } from '../store/types';
 
 const directorSchema: Schema = {
     type: Type.OBJECT,
@@ -47,9 +48,26 @@ const directorSchema: Schema = {
         vibe_prompt: {
             type: Type.STRING,
             description: "A short, poetic, abstract prompt in Japanese describing the vibe of the structure. (e.g., '水面に浮かぶネオンの残骸')"
+        },
+        hint_svg: {
+            type: Type.STRING,
+            description: "A valid, simple inline SVG string depicting a 2D abstract shape or silhouette that matches the vibe. Use cyber colors. Max 300x300 viewBox."
+        },
+        hint_foundation: {
+            type: Type.ARRAY,
+            items: {
+                type: Type.OBJECT,
+                properties: {
+                    pos: { type: Type.ARRAY, items: { type: Type.INTEGER } },
+                    color: { type: Type.STRING },
+                    type: { type: Type.STRING }
+                },
+                required: ["pos", "color", "type"]
+            },
+            description: "A small subset (1-5 blocks) of the main voxels to act as a starting foundation for the player."
         }
     },
-    required: ["grid_size", "voxels", "vibe_vector", "vibe_prompt"]
+    required: ["grid_size", "voxels", "vibe_vector", "vibe_prompt", "hint_svg", "hint_foundation"]
 };
 
 export const generateGeminiDirectorPlan = async (apiKey: string): Promise<DirectorPlan> => {

@@ -1,4 +1,3 @@
-
 import { create } from 'zustand';
 import type { GameState, GamePhase, DirectorPlan, Voxel, Vector3 } from './types';
 
@@ -11,7 +10,10 @@ export const useGameStore = create<GameState>((set) => ({
 
     setPhase: (phase: GamePhase) => set({ phase }),
 
-    setDirectorPlan: (plan: DirectorPlan) => set({ directorPlan: plan, playerVoxels: [] }),
+    setDirectorPlan: (plan: DirectorPlan) => set({
+        directorPlan: plan,
+        playerVoxels: plan.hint_foundation || []
+    }),
 
     addVoxel: (voxel: Voxel) => set((state) => {
         // Check if a voxel already exists at this position
@@ -47,4 +49,3 @@ export const useGameStore = create<GameState>((set) => ({
         set({ apiKey: key });
     }
 }));
-
