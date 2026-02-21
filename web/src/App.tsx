@@ -228,7 +228,7 @@ function Game() {
           ) : (
             <div className="w-full max-w-lg mb-2 md:mb-4">
               <div className="text-[10px] font-mono uppercase tracking-widest text-cyber-accent mb-2 text-left">
-                <span className="line-through">ヤバ</span>さクライアントモード選択
+                クライアントモード選択
               </div>
               <div className="grid grid-cols-2 md:grid-cols-5 gap-2">
                 {VIBE_CODING_OPTIONS.map((opt) => (
