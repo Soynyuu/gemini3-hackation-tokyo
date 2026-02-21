@@ -290,7 +290,7 @@ function VoxelCanvas() {
     canvas.height = size * dpr;
     ctx.scale(dpr, dpr);
 
-    const colors = ['#4F8AFF', '#A855F7', '#F43F5E', '#3B82F6', '#EC4899'];
+    const colors = ['#FF6B00', '#52525B', '#0891B2', '#E5E7EB', '#26282E'];
     const voxels: { x: number; y: number; z: number; color: string; delay: number }[] = [];
 
     for (let i = 0; i < 20; i++) {
@@ -393,8 +393,8 @@ function FlowDiagram() {
         <svg width="60" height="24" viewBox="0 0 60 24" className="text-cyber-primary">
           <defs>
             <linearGradient id="arrowGrad" x1="0" y1="0" x2="1" y2="0">
-              <stop offset="0%" stopColor="#A855F7" />
-              <stop offset="100%" stopColor="#4F8AFF" />
+              <stop offset="0%" stopColor="#FF6B00" />
+              <stop offset="100%" stopColor="#52525B" />
             </linearGradient>
           </defs>
           <line
@@ -406,7 +406,7 @@ function FlowDiagram() {
             strokeWidth="2"
             className="animate-dash"
           />
-          <polygon points="48,6 60,12 48,18" fill="#4F8AFF" />
+          <polygon points="48,6 60,12 48,18" fill="#FF6B00" />
         </svg>
         <span className="text-cyber-muted text-[10px] tracking-wider">VIBE</span>
       </div>
@@ -450,8 +450,8 @@ export default function Teaser() {
         <LangToggle />
 
         {/* Grid background */}
-        <div className="fixed inset-0 bg-[linear-gradient(to_right,#1E2D3D11_1px,transparent_1px),linear-gradient(to_bottom,#1E2D3D11_1px,transparent_1px)] bg-[size:48px_48px] pointer-events-none" />
-        <div className="fixed inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,#7000FF15,transparent)] pointer-events-none" />
+        <div className="fixed inset-0 bg-[linear-gradient(to_right,theme('colors.cyber.border')_1px,transparent_1px),linear-gradient(to_bottom,theme('colors.cyber.border')_1px,transparent_1px)] bg-[size:32px_32px] opacity-[0.08] pointer-events-none" />
+        <div className="fixed inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,theme('colors.cyber.primary')_0.1,transparent)] opacity-10 pointer-events-none" />
 
         {/* Hero */}
         <section className="relative min-h-screen flex flex-col items-center justify-center px-6">
@@ -466,13 +466,13 @@ export default function Teaser() {
             </div>
 
             <h1 className="text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-black tracking-tighter leading-[0.9] mb-6">
-              <span className="bg-gradient-to-r from-white via-cyber-text to-cyber-muted bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-zinc-300 via-white to-zinc-500 bg-clip-text text-transparent">
                 VIBE
               </span>
               <br />
               <GlitchText
                 text="ARCHITECT"
-                className="bg-gradient-to-r from-cyber-primary via-cyber-secondary to-cyber-accent bg-clip-text text-transparent"
+                className="text-white"
               />
             </h1>
 

@@ -14,6 +14,7 @@ import { SliceEditor } from './components/ui/SliceEditor';
 import { ClientInterruptionOverlay } from './components/ui/ClientInterruption';
 import { useInterruptionScheduler } from './hooks/useInterruptionScheduler';
 import Teaser from './pages/Teaser';
+import { ThemeToggle } from './components/ui/ThemeToggle';
 import { Play } from 'lucide-react';
 import type { VoxelType, GameMode, VibeCodingLevel } from './store/types';
 
@@ -61,7 +62,7 @@ function Game() {
   const initVibeCodingState = useGameStore((s) => s.initVibeCodingState);
   const resetVibeCodingState = useGameStore((s) => s.resetVibeCodingState);
 
-  const [activeColor, setActiveColor] = useState('#EF4444');
+  const [activeColor, setActiveColor] = useState('#C2410C');
   const [activeType, setActiveType] = useState<VoxelType>('standard');
   const [activeLayer, setActiveLayer] = useState(0);
   const [isGenerating, setIsGenerating] = useState(false);
@@ -387,21 +388,36 @@ function Game() {
     const finalVibeScore = aiEvalResult ? aiEvalResult.vibeScore : scores.vibeScore;
     const finalRationale = aiEvalResult ? aiEvalResult.rationale : 'AI解析を待機中...';
 
+    const getGradeInfo = (score: number) => {
+      if (score >= 95) return { letter: 'S', color: 'text-yellow-400', border: 'border-yellow-400', glow: 'shadow-[0_0_15px_rgba(250,204,21,0.5)]', label: 'OUTSTANDING', glitch: true };
+      if (score >= 80) return { letter: 'A', color: 'text-cyber-primary', border: 'border-cyber-primary', glow: 'shadow-[0_0_15px_rgba(255,107,0,0.5)]', label: 'EXCELLENT', glitch: false };
+      if (score >= 60) return { letter: 'B', color: 'text-cyber-accent', border: 'border-cyber-accent', glow: 'shadow-[0_0_10px_rgba(8,145,178,0.5)]', label: 'GOOD', glitch: false };
+      if (score >= 40) return { letter: 'C', color: 'text-cyber-secondary', border: 'border-cyber-secondary', glow: '', label: 'AVERAGE', glitch: false };
+      return { letter: 'F', color: 'text-red-500', border: 'border-red-500', glow: 'shadow-[0_0_15px_rgba(239,68,68,0.5)]', label: 'POOR', glitch: false };
+    };
+
+    const grade = getGradeInfo(finalVibeScore);
+
     return (
-      <div className="min-h-[100dvh] w-screen flex flex-col bg-cyber-background text-white overflow-y-auto">
-        <div className="p-4 md:p-8 pb-2 md:pb-4 text-center border-b border-cyber-border">
-          <h1 className={`text-2xl md:text-4xl font-black uppercase tracking-widest ${isVibeCoding ? 'text-cyber-accent' : 'text-cyber-primary'}`}>
+      <div className="min-h-[100dvh] w-screen flex flex-col bg-cyber-background text-white overflow-y-auto animate-slide-up">
+        <div className="p-4 md:p-8 pb-2 md:pb-4 text-center border-b border-cyber-border bg-black/50 backdrop-blur-sm relative overflow-hidden">
+          <div className={`absolute inset-0 bg-gradient-to-b ${isVibeCoding ? 'from-cyber-accent/10' : 'from-cyber-primary/10'} to-transparent pointer-events-none`}></div>
+          <h1 className={`text-2xl md:text-5xl font-black uppercase tracking-[0.2em] animate-pulse-glow relative z-10 ${isVibeCoding ? 'text-cyber-accent' : 'text-cyber-primary'}`}>
             {isVibeCoding ? 'バイブコーディング完了' : '解析完了'}
           </h1>
-          <p className="text-cyber-muted mt-1 md:mt-2 font-mono text-sm md:text-base">
+          <p className="text-cyber-accent mt-2 md:mt-3 font-mono text-sm md:text-lg tracking-wider relative z-10">
             {isVibeCoding ? `初期お題: 「${directorPlan.vibe_prompt}」` : `お題: 「${directorPlan.vibe_prompt}」`}
           </p>
+          <div className="absolute top-0 right-0 p-4 opacity-20 font-mono text-xs hidden md:block">VIBE_SYS_EVAL_v2.5</div>
         </div>
 
-        <div className="grid grid-cols-2 lg:grid-cols-2 flex-grow">
-          <div className="relative border-r border-cyber-border/50 flex flex-col">
-            <div className="absolute top-2 left-2 md:top-6 md:left-6 z-10 font-mono font-bold text-sm md:text-xl text-white/50">あなたの構築</div>
-            <div className="flex-grow min-h-[200px] md:min-h-[400px]">
+        <div className="grid grid-cols-1 lg:grid-cols-2 flex-grow bg-cyber-background">
+          <div className="relative border-b lg:border-b-0 lg:border-r border-cyber-border/50 flex flex-col">
+            <div className="absolute top-2 left-2 md:top-6 md:left-6 z-10 flex items-center gap-2 bg-black/60 px-3 py-1 border border-white/10 rounded-full shadow-lg backdrop-blur-sm">
+              <div className="w-2 h-2 rounded-full bg-white opacity-50"></div>
+              <span className="font-mono font-bold text-xs md:text-sm text-white/70 uppercase tracking-widest">あなたの構築</span>
+            </div>
+            <div className="flex-grow min-h-[300px] md:min-h-[400px]">
               <Canvas camera={{ position: [6, 6, 6], fov: 40 }} gl={{ preserveDrawingBuffer: true }} onCreated={({ gl }) => {
                 if (!aiEvalResult && apiKey && !isEvaluating) {
                   setIsEvaluating(true);
@@ -460,50 +476,75 @@ function Game() {
           )}
         </div>
 
-        <div className="p-4 md:p-8 border-t border-cyber-border bg-cyber-surface/50 grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-8 items-center">
+        <div className="p-4 md:p-8 border-t border-cyber-border bg-black/80 backdrop-blur-md grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8 items-center relative z-20 shadow-[0_-10px_30px_rgba(0,0,0,0.5)]">
           {isVibeCoding ? (
-            <div className="p-3 md:p-6 rounded-xl border border-cyber-border bg-black/40 text-center">
-              <div className="text-[10px] md:text-sm font-mono text-cyber-muted uppercase tracking-widest mb-1 md:mb-2">仕様変更回数</div>
-              <div className="text-4xl md:text-6xl font-black text-cyber-accent">{vibeCodingState?.interruptionCount ?? 0}</div>
+            <div className="col-span-2 lg:col-span-1 p-4 md:p-6 rounded-xl border border-cyber-border bg-cyber-surface/40 text-center flex flex-col justify-center items-center shadow-inner relative overflow-hidden group">
+              <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent pointer-events-none group-hover:from-white/10 transition-colors"></div>
+              <div className="text-xs md:text-sm font-mono text-cyber-accent/80 uppercase tracking-widest mb-1 md:mb-2 z-10">仕様変更回数</div>
+              <div className="text-4xl md:text-5xl font-black text-cyber-accent tracking-tighter z-10">{vibeCodingState?.interruptionCount ?? 0}</div>
             </div>
           ) : (
-            <div className="p-3 md:p-6 rounded-xl border border-cyber-border bg-black/40 text-center">
-              <div className="text-[10px] md:text-sm font-mono text-cyber-muted uppercase tracking-widest mb-1 md:mb-2">構造一致</div>
-              <div className="text-4xl md:text-6xl font-black text-white">{scores.structureScore}%</div>
+            <div className="col-span-2 lg:col-span-1 p-4 md:p-6 rounded-xl border border-cyber-border bg-cyber-surface/40 text-center flex flex-col justify-center items-center shadow-inner relative overflow-hidden group">
+              <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent pointer-events-none group-hover:from-white/10 transition-colors"></div>
+              <div className="text-xs md:text-sm font-mono text-cyan-500/80 uppercase tracking-widest mb-1 md:mb-2 z-10">構造一致</div>
+              <div className="text-4xl md:text-5xl font-black text-white tracking-tighter z-10">{scores.structureScore}<span className="text-xl md:text-2xl text-cyber-muted">%</span></div>
             </div>
-          )}
+          )
 
-          <div className="p-3 md:p-6 rounded-xl border border-cyber-border bg-black/40 text-center relative overflow-hidden">
+          <div className={`col-span-2 lg:col-span-1 p-4 md:p-6 rounded-xl border bg-cyber-surface/60 text-center relative overflow-hidden transition-all duration-700 ${aiEvalResult ? grade.border + ' ' + grade.glow : 'border-cyber-border'}`}>
             {isEvaluating && (
-              <div className="absolute inset-0 bg-cyber-surface/90 backdrop-blur-sm flex flex-col items-center justify-center z-10">
-                <div className="w-6 h-6 md:w-8 md:h-8 border-4 border-cyber-secondary border-t-transparent rounded-full animate-spin mb-2"></div>
-                <div className="text-[10px] md:text-xs font-bold text-cyber-secondary animate-pulse">解析中...</div>
+              <div className="absolute inset-0 bg-black/80 backdrop-blur-md flex flex-col items-center justify-center z-20">
+                <div className="w-8 h-8 md:w-10 md:h-10 border-4 border-cyber-accent border-t-transparent rounded-full animate-spin mb-3 shadow-[0_0_15px_rgba(8,145,178,0.5)]"></div>
+                <div className="text-[10px] md:text-xs font-mono font-bold text-cyber-accent tracking-widest animate-pulse">VIBE SCANNING...</div>
               </div>
             )}
-            <div className="text-[10px] md:text-sm font-mono text-cyber-muted uppercase tracking-widest mb-1 md:mb-2">
-              {isVibeCoding ? 'クライアント満足度' : 'バイブ適合度'}
+            <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent pointer-events-none"></div>
+            <div className="text-xs md:text-sm font-mono text-cyber-primary/80 uppercase tracking-widest mb-1 md:mb-2 z-10 bg-black/40 inline-block px-2 py-0.5 rounded border border-white/5">Vibe適合度</div>
+            <div className={`text-5xl md:text-6xl font-black z-10 transition-colors duration-500 block mt-2 ${aiEvalResult ? grade.color : 'text-cyber-muted'} ${grade.glitch && aiEvalResult ? 'animate-pulse-glow' : ''}`}>
+              {finalVibeScore}<span className="text-2xl text-cyber-muted ml-0.5">%</span>
             </div>
-            <div className="text-4xl md:text-6xl font-black text-cyber-secondary">{finalVibeScore}%</div>
+            {aiEvalResult && (
+              <div className={`absolute top-2 right-2 md:top-3 md:right-3 w-8 h-8 md:w-10 md:h-10 rounded-full border-2 flex items-center justify-center font-black text-lg md:text-xl ${grade.color} ${grade.border} bg-black z-10 transform rotate-12 ${grade.glitch ? 'animate-glitch' : ''}`}>
+                {grade.letter}
+              </div>
+            )}
           </div>
 
-          <div className="col-span-2 md:col-span-1 flex flex-col gap-3">
-            <div className={`p-3 md:p-4 rounded-lg ${isVibeCoding ? 'bg-cyber-accent/10 border border-cyber-accent/30' : 'bg-cyber-primary/10 border border-cyber-primary/30'}`}>
-              <div className={`text-[10px] md:text-xs uppercase tracking-widest ${isVibeCoding ? 'text-cyber-accent' : 'text-cyber-primary'} font-bold mb-1 md:mb-2`}>
-                {isVibeCoding ? 'クライアントの感想' : 'ディレクターによる解析'}
+          <div className="col-span-2 lg:col-span-2 flex flex-col gap-3 h-full justify-between animate-slide-up-delayed">
+            <div className="p-4 md:p-5 rounded-lg bg-[#111] border border-cyber-border relative flex-grow flex flex-col justify-center overflow-hidden">
+              <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0IiBoZWlnaHQ9IjQiPjxyZWN0IHdpZHRoPSI0IiBoZWlnaHQ9IjQiIGZpbGw9IiMxMTEiLz48cmVjdCB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSIjMzMzIi8+PC9zdmc+')] opacity-50 pointer-events-none"></div>
+              <div className="absolute top-0 right-0 p-2 opacity-30">
+                <div className={`w-1.5 h-1.5 rounded-full ${isVibeCoding ? 'bg-cyber-accent' : 'bg-cyber-primary'} animate-ping`}></div>
               </div>
-              <p className="text-xs md:text-sm text-cyber-text/80 italic">
-                {isEvaluating ? "AI審査官が解析中..." : `「${finalRationale}」`}
+              <div className="text-[10px] md:text-xs font-mono uppercase tracking-widest text-[#888] font-bold mb-2 flex items-center gap-2 relative z-10">
+                <span className={`w-2 h-2 inline-block ${isVibeCoding ? 'bg-cyber-accent/70' : 'bg-cyber-primary/70'}`}></span>
+                {isVibeCoding ? 'クライアントの感想' : 'ディレクター解析レポート'}
+              </div>
+              <p className="text-sm md:text-base text-gray-200 font-medium leading-relaxed bg-black/60 p-3 rounded border border-white/10 font-mono shadow-inner relative z-10 min-h-[60px] flex items-center">
+                {isEvaluating ? (
+                  <span className="animate-pulse text-cyber-accent tracking-widest text-xs flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 bg-cyber-accent rounded-full inline-block"></span>
+                    AI審査官が解析中...
+                  </span>
+                ) : (
+                  <span><span className={`${isVibeCoding ? 'text-cyber-accent' : 'text-cyber-primary'} mr-2`}>{'>'}</span>{finalRationale}</span>
+                )}
               </p>
             </div>
+
             <button
               onClick={() => {
                 setAiEvalResult(null);
                 resetVibeCodingState();
                 setPhase('title');
               }}
-              className="w-full py-3 md:py-4 bg-cyber-border hover:bg-cyber-muted text-white uppercase font-bold tracking-widest rounded transition-colors text-sm md:text-base"
+              className="group relative w-full py-4 bg-transparent border-2 border-cyber-muted hover:border-cyber-primary text-cyber-muted hover:text-white uppercase font-black tracking-[0.3em] overflow-hidden rounded transition-all duration-300 text-sm md:text-base focus:outline-none focus:ring-2 focus:ring-cyber-primary/50 flex flex-col items-center justify-center"
             >
-              コアへ戻る
+              <div className="absolute inset-0 w-0 transition-all duration-300 ease-out group-hover:w-full opacity-30 bg-cyber-primary"></div>
+              <span className="relative z-10 flex items-center justify-center gap-2">
+                <span className="opacity-0 group-hover:opacity-100 transition-opacity transform -translate-x-2 group-hover:translate-x-0">←</span> コアシステムへ帰還
+              </span>
+              <div className="absolute bottom-1 right-2 text-[8px] font-mono text-cyber-muted/50 group-hover:text-cyber-primary/50 transition-colors">INITIATE_REBOOT</div>
             </button>
           </div>
         </div>
@@ -522,12 +563,27 @@ function Game() {
 
 function App() {
   const [route] = useHashRoute();
+  const [theme, setTheme] = useState<'light' | 'dark'>(() => {
+    const saved = localStorage.getItem('vibe-theme');
+    if (saved === 'light' || saved === 'dark') return saved;
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  });
 
-  if (route === 'game') {
-    return <Game />;
-  }
+  useEffect(() => {
+    const root = window.document.documentElement;
+    root.classList.remove('light', 'dark');
+    root.classList.add(theme);
+    localStorage.setItem('vibe-theme', theme);
+  }, [theme]);
 
-  return <Teaser />;
+  const toggleTheme = () => setTheme(prev => prev === 'light' ? 'dark' : 'light');
+
+  return (
+    <>
+      <ThemeToggle theme={theme} toggle={toggleTheme} />
+      {route === 'game' ? <Game /> : <Teaser />}
+    </>
+  );
 }
 
 export default App;
