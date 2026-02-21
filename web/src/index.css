@@ -1,0 +1,25 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-cyber-background text-cyber-text font-sans antialiased overflow-hidden m-0 p-0 selection:bg-cyber-primary selection:text-cyber-background;
+  }
+}
+
+/* Custom Webkit Scrollbar for premium feel */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: theme('colors.cyber.background');
+}
+::-webkit-scrollbar-thumb {
+  background: theme('colors.cyber.border');
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: theme('colors.cyber.muted');
+}
