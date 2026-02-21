@@ -10,8 +10,33 @@ Built for Gemini 3 Hackathon Tokyo.
 
 | Package | Description | Public |
 |---------|-------------|--------|
-| `packages/voxel-core` | [microvoxel-5](https://www.npmjs.com/package/microvoxel-5) — voxel scoring & VibeVector analysis | npm |
+| [microvoxel-5](https://www.npmjs.com/package/microvoxel-5) | Voxel scoring & VibeVector analysis | npm |
 | `web` | Vibe Architect game client (React + Three.js) | No |
+
+## Quick Start
+
+**Live Demo**: https://gemini-vibe-architect.pages.dev
+
+1. 上記URLにアクセスします
+2. タイトル画面で **Gemini API Key** を入力します（キーはブラウザの `localStorage` にのみ保存されます）
+3. 「接続を開始する」ボタンを押すと、Gemini がランダムなお題（バイブス）と構造を生成します
+4. 制限時間内にお題に沿った3D構造を構築してください
+5. 終了後、Gemini Pro Vision があなたの作品を視覚的に解析し、適合スコアとフィードバックを提供します
+
+### Local Development
+
+```bash
+cd web
+bun install
+bun dev
+```
+
+### Deploy (Cloudflare Pages)
+
+```bash
+bun run build
+bunx wrangler pages deploy dist --project-name gemini-vibe-architect
+```
 
 ## Concept
 
