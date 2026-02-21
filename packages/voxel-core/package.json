@@ -1,0 +1,35 @@
+{
+  "name": "@vibe-architect/voxel-core",
+  "version": "0.1.0",
+  "description": "Pure-logic voxel toolkit for Vibe Architect — types, CRUD, scoring, director plans, and LLM-ready JSON Schemas",
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./schemas": "./src/schemas/index.ts"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [
+    "voxel",
+    "vibe",
+    "llm",
+    "json-schema",
+    "structured-output"
+  ],
+  "license": "MIT",
+  "devDependencies": {
+    "tsup": "^8.5.0",
+    "typescript": "~5.9.3",
+    "vitest": "^3.2.4"
+  }
+}

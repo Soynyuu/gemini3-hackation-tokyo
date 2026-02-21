@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, Environment, ContactShadows } from '@react-three/drei';
 import { useGameStore } from './store/gameStore';
@@ -8,17 +8,46 @@ import { evaluateWithGemini } from './lib/geminiJudge';
 import { VoxelGrid } from './components/3d/VoxelGrid';
 import { Toolbar } from './components/ui/Toolbar';
 import { GameHUD } from './components/ui/GameHUD';
+import { SliceEditor } from './components/ui/SliceEditor';
+import Teaser from './pages/Teaser';
 import type { VoxelType } from './store/types';
 
-function App() {
+type Route = 'teaser' | 'game';
+
+function useHashRoute(): [Route, (r: Route) => void] {
+  const getRoute = useCallback((): Route => {
+    return window.location.hash === '#/game' ? 'game' : 'teaser';
+  }, []);
+
+  const [route, setRouteState] = useState<Route>(getRoute);
+
+  useEffect(() => {
+    const onHash = () => setRouteState(getRoute());
+    window.addEventListener('hashchange', onHash);
+    return () => window.removeEventListener('hashchange', onHash);
+  }, [getRoute]);
+
+  const setRoute = useCallback((r: Route) => {
+    window.location.hash = r === 'game' ? '#/game' : '#/';
+  }, []);
+
+  return [route, setRoute];
+}
+
+function Game() {
   const { phase, setPhase, setDirectorPlan, setTimeRemaining, directorPlan, playerVoxels, apiKey } = useGameStore();
 
   const [activeColor, setActiveColor] = useState('#FF3B30');
   const [activeType, setActiveType] = useState<VoxelType>('standard');
+  const [activeLayer, setActiveLayer] = useState(0);
   const [isGenerating, setIsGenerating] = useState(false);
-
   const [isEvaluating, setIsEvaluating] = useState(false);
   const [aiEvalResult, setAiEvalResult] = useState<{ vibeScore: number, rationale: string } | null>(null);
+
+  useEffect(() => {
+    document.body.classList.add('game-mode');
+    return () => document.body.classList.remove('game-mode');
+  }, []);
 
   const startRound = async () => {
     if (!apiKey) return;
@@ -39,7 +68,6 @@ function App() {
 
   const renderTitle = () => (
     <div className="h-screen w-screen flex flex-col items-center justify-center bg-cyber-background text-white p-6 relative overflow-hidden">
-      {/* Abstract Background Elements */}
       <div className="absolute top-[-20%] left-[-10%] w-[50vw] h-[50vw] bg-cyber-primary/20 rounded-full blur-[120px] pointer-events-none"></div>
       <div className="absolute bottom-[-20%] right-[-10%] w-[50vw] h-[50vw] bg-cyber-secondary/20 rounded-full blur-[120px] pointer-events-none"></div>
 
@@ -88,30 +116,33 @@ function App() {
   );
 
   const renderBuild = () => (
-    <div className="h-screen w-screen relative bg-cyber-background overflow-hidden flex flex-col">
+    <div className="h-screen w-screen bg-cyber-background select-none flex flex-col md:flex-row">
       <GameHUD />
-      <div className="flex-grow relative">
-        <Canvas camera={{ position: [8, 8, 8], fov: 45 }}>
+
+      <div className="order-2 md:order-1 flex-1 flex flex-col items-center justify-center gap-4 p-4 md:p-6 min-h-0 overflow-y-auto md:w-[55%] md:flex-none">
+        <SliceEditor
+          activeLayer={activeLayer}
+          setActiveLayer={setActiveLayer}
+          activeColor={activeColor}
+          activeType={activeType}
+        />
+        <Toolbar
+          className="relative"
+          activeColor={activeColor} setActiveColor={setActiveColor}
+          activeType={activeType} setActiveType={setActiveType}
+        />
+      </div>
+
+      <div className="order-1 md:order-2 h-[200px] md:h-full md:flex-1 relative">
+        <Canvas camera={{ position: [8, 8, 8], fov: 40 }}>
           <ambientLight intensity={0.5} />
           <directionalLight position={[10, 10, 5]} intensity={1.5} />
-          <Environment preset="city" />
-
-          <VoxelGrid
-            activeColor={activeColor}
-            activeType={activeType}
-            voxels={playerVoxels}
-          />
-
-          <ContactShadows position={[0, -0.5, 0]} opacity={0.4} scale={20} blur={2} />
-          <OrbitControls makeDefault minPolarAngle={0} maxPolarAngle={Math.PI / 2 + 0.1} />
+          <Environment preset="night" />
+          <VoxelGrid activeColor={activeColor} activeType={activeType} readOnly highlightLayer={activeLayer} />
+          <OrbitControls autoRotate autoRotateSpeed={2} makeDefault minPolarAngle={0} maxPolarAngle={Math.PI / 2 + 0.1} />
+          <ContactShadows position={[0, -0.51, 0]} opacity={0.4} scale={20} blur={2} far={4} />
         </Canvas>
       </div>
-      <Toolbar
-        activeColor={activeColor}
-        setActiveColor={setActiveColor}
-        activeType={activeType}
-        setActiveType={setActiveType}
-      />
     </div>
   );
 
@@ -119,7 +150,6 @@ function App() {
     if (!directorPlan) return null;
     const scores = calculateScores(playerVoxels, directorPlan);
 
-    // Override the mock rationale with the AI rationale if we have it
     const finalVibeScore = aiEvalResult ? aiEvalResult.vibeScore : scores.vibeScore;
     const finalRationale = aiEvalResult ? aiEvalResult.rationale : scores.rationale;
 
@@ -131,15 +161,12 @@ function App() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 flex-grow">
-          {/* Player Result */}
           <div className="relative border-r border-cyber-border/50 flex flex-col">
             <div className="absolute top-6 left-6 z-10 font-mono font-bold text-xl text-white/50">あなたの構築</div>
             <div className="flex-grow min-h-[400px]">
               <Canvas camera={{ position: [6, 6, 6], fov: 40 }} gl={{ preserveDrawingBuffer: true }} onCreated={({ gl }) => {
-                // If we haven't evaluated yet and we have an API key, trigger it
                 if (!aiEvalResult && apiKey && !isEvaluating) {
                   setIsEvaluating(true);
-                  // small delay to ensure render is done
                   setTimeout(() => {
                     const base64 = gl.domElement.toDataURL('image/png');
                     evaluateWithGemini(apiKey, base64, directorPlan.vibe_prompt)
@@ -158,7 +185,6 @@ function App() {
             </div>
           </div>
 
-          {/* Director's Hidden Intent */}
           <div className="relative flex flex-col">
             <div className="absolute top-6 left-6 z-10 font-mono font-bold text-xl text-cyber-accent">ディレクターの理想</div>
             <div className="flex-grow min-h-[400px]">
@@ -219,6 +245,16 @@ function App() {
       {phase === 'reveal' && renderReveal()}
     </>
   );
+}
+
+function App() {
+  const [route] = useHashRoute();
+
+  if (route === 'game') {
+    return <Game />;
+  }
+
+  return <Teaser />;
 }
 
 export default App;
