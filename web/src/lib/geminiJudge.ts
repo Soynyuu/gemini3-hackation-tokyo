@@ -33,6 +33,7 @@ export const evaluateWithGemini = async (
     Look at the provided image of their voxel structure.
     Evaluate how well the shape, color usage, and overall aesthetic map to the target vibe.
     Return a score (0-100) and a short feedback rationale in Japanese.
+    IMPORTANT: The 'rationale' field MUST be written in natural, helpful Japanese.
   `;
 
     try {
