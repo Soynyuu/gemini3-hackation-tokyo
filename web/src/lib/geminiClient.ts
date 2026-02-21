@@ -141,7 +141,7 @@ ${level === 'investor' || level === 'ceo' ? '前の指示と矛盾してもOK。
 referenceImageはクライアントが頭の中で思い描いてる完成イメージのSVG。`;
 
     const response = await ai.models.generateContent({
-        model: 'gemini-2.5-flash',
+        model: 'gemini-3-flash-preview',
         contents: prompt,
         config: {
             responseMimeType: "application/json",
