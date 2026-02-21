@@ -31,6 +31,7 @@ export interface GameState {
     directorPlan: DirectorPlan | null;
     playerVoxels: Voxel[];
     timeRemaining: number;
+    apiKey: string | null;
 
     // Actions
     setPhase: (phase: GamePhase) => void;
@@ -39,4 +40,5 @@ export interface GameState {
     removeVoxel: (pos: Vector3) => void;
     clearVoxels: () => void;
     setTimeRemaining: (time: number) => void;
+    setApiKey: (key: string) => void;
 }

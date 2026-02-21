@@ -1,3 +1,4 @@
+
 import { create } from 'zustand';
 import type { GameState, GamePhase, DirectorPlan, Voxel, Vector3 } from './types';
 
@@ -6,6 +7,7 @@ export const useGameStore = create<GameState>((set) => ({
     directorPlan: null,
     playerVoxels: [],
     timeRemaining: 120, // 2 minutes
+    apiKey: localStorage.getItem('gemini_api_key') || null,
 
     setPhase: (phase: GamePhase) => set({ phase }),
 
@@ -38,5 +40,11 @@ export const useGameStore = create<GameState>((set) => ({
 
     clearVoxels: () => set({ playerVoxels: [] }),
 
-    setTimeRemaining: (time: number) => set({ timeRemaining: time })
+    setTimeRemaining: (time: number) => set({ timeRemaining: time }),
+
+    setApiKey: (key: string) => {
+        localStorage.setItem('gemini_api_key', key);
+        set({ apiKey: key });
+    }
 }));
+
