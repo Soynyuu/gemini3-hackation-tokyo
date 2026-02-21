@@ -279,23 +279,10 @@ function Game() {
             }`}>
               {isGenerating
                 ? '生成中...'
-                : apiKey
-                  ? localGameMode === 'vibe-coding' ? 'クライアントと接続する' : '接続を開始する'
-                  : 'モックモードで開始'}
+                : localGameMode === 'vibe-coding' ? 'クライアントと接続する' : '接続を開始する'}
             </span>
           </button>
 
-          <div className="mt-4 md:mt-8 flex flex-col items-center gap-2 max-w-sm w-full">
-            <label className="text-xs text-cyber-muted uppercase tracking-wider font-mono">Gemini APIキー</label>
-            <input
-              type="password"
-              placeholder="AIzaSy..."
-              value={apiKey || ''}
-              onChange={(e) => useGameStore.getState().setApiKey(e.target.value)}
-              className="w-full bg-cyber-surface border border-cyber-border rounded px-4 py-2 text-cyber-text text-sm font-mono focus:outline-none focus:border-cyber-primary bg-transparent"
-            />
-            <div className="text-[10px] text-cyber-muted/60 mt-1">※キーはブラウザにのみ保存されます</div>
-          </div>
         </div>
       </div>
     </div>

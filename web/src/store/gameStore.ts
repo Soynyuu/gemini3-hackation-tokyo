@@ -9,7 +9,7 @@ export const useGameStore = create<GameState>((set) => ({
     directorPlan: null,
     playerVoxels: [],
     timeRemaining: 120,
-    apiKey: localStorage.getItem('gemini_api_key') || null,
+    apiKey: import.meta.env.VITE_GEMINI_API_KEY || localStorage.getItem('gemini_api_key') || null,
     gameMode: 'classic',
     vibeCodingState: null,
 
