@@ -1,4 +1,4 @@
-import { GoogleGenAI, Type } from '@google/genai';
+import { GoogleGenAI, Type, ThinkingLevel } from '@google/genai';
 import type { Schema } from '@google/genai';
 import type { DirectorPlan } from '../store/types';
 
@@ -167,6 +167,9 @@ export const generateGeminiDirectorPlan = async (
                 responseMimeType: "application/json",
                 responseSchema: directorSchema,
                 temperature: 0.9,
+                thinkingConfig: {
+                    thinkingLevel: ThinkingLevel.MINIMAL,
+                },
             }
         });
 

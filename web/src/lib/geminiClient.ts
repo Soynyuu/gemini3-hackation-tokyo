@@ -1,4 +1,4 @@
-import { GoogleGenAI, Type } from '@google/genai';
+import { GoogleGenAI, Type, ThinkingLevel } from '@google/genai';
 import type { Schema } from '@google/genai';
 import type { ClientInterruption, VibeCodingLevel } from '../store/types';
 
@@ -10,47 +10,47 @@ export const VIBE_CODING_OPTIONS: {
     intervalRange: [number, number];
     timerExtensionChance: number;
 }[] = [
-    {
-        value: 'engineer',
-        label: 'エンジニア',
-        description: '座標とカラーコードで的確に指示してくる',
-        maxInterruptions: 3,
-        intervalRange: [30, 45],
-        timerExtensionChance: 0.4,
-    },
-    {
-        value: 'junior-pm',
-        label: '新人PM',
-        description: '丁寧だけど優柔不断。すぐ迷う',
-        maxInterruptions: 2,
-        intervalRange: [35, 50],
-        timerExtensionChance: 0.5,
-    },
-    {
-        value: 'senior-pm',
-        label: 'ベテランPM',
-        description: '意見コロコロ変わるタイプ',
-        maxInterruptions: 3,
-        intervalRange: [25, 40],
-        timerExtensionChance: 0.3,
-    },
-    {
-        value: 'ceo',
-        label: '社長',
-        description: '曖昧なビジョナリー指示しか出さない',
-        maxInterruptions: 4,
-        intervalRange: [20, 35],
-        timerExtensionChance: 0.2,
-    },
-    {
-        value: 'investor',
-        label: '投資家',
-        description: '完全カオス。矛盾・ピボット・スラング',
-        maxInterruptions: 5,
-        intervalRange: [15, 25],
-        timerExtensionChance: 0.1,
-    },
-];
+        {
+            value: 'engineer',
+            label: 'エンジニア',
+            description: '座標とカラーコードで的確に指示してくる',
+            maxInterruptions: 3,
+            intervalRange: [30, 45],
+            timerExtensionChance: 0.4,
+        },
+        {
+            value: 'junior-pm',
+            label: '新人PM',
+            description: '丁寧だけど優柔不断。すぐ迷う',
+            maxInterruptions: 2,
+            intervalRange: [35, 50],
+            timerExtensionChance: 0.5,
+        },
+        {
+            value: 'senior-pm',
+            label: 'ベテランPM',
+            description: '意見コロコロ変わるタイプ',
+            maxInterruptions: 3,
+            intervalRange: [25, 40],
+            timerExtensionChance: 0.3,
+        },
+        {
+            value: 'ceo',
+            label: '社長',
+            description: '曖昧なビジョナリー指示しか出さない',
+            maxInterruptions: 4,
+            intervalRange: [20, 35],
+            timerExtensionChance: 0.2,
+        },
+        {
+            value: 'investor',
+            label: '投資家',
+            description: '完全カオス。矛盾・ピボット・スラング',
+            maxInterruptions: 5,
+            intervalRange: [15, 25],
+            timerExtensionChance: 0.1,
+        },
+    ];
 
 const clientPersonaPrompts: Record<VibeCodingLevel, string> = {
     'engineer': `
@@ -147,6 +147,9 @@ referenceImageはクライアントが頭の中で思い描いてる完成イメ
             responseMimeType: "application/json",
             responseSchema: interruptionSchema,
             temperature: level === 'investor' ? 1.2 : level === 'ceo' ? 1.0 : level === 'engineer' ? 0.5 : 0.8,
+            thinkingConfig: {
+                thinkingLevel: ThinkingLevel.MINIMAL,
+            },
         },
     });
 

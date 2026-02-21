@@ -1,4 +1,4 @@
-import { GoogleGenAI, Type } from '@google/genai';
+import { GoogleGenAI, Type, ThinkingLevel } from '@google/genai';
 import type { Schema } from '@google/genai';
 import type { ClientInterruption } from '../store/types';
 
@@ -63,6 +63,9 @@ ${interruptionContext}
                 responseMimeType: "application/json",
                 responseSchema: evaluationSchema,
                 temperature: 0.2,
+                thinkingConfig: {
+                    thinkingLevel: ThinkingLevel.MINIMAL,
+                },
             }
         });
 
