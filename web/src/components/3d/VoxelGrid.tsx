@@ -9,9 +9,10 @@ interface VoxelGridProps {
     activeType: VoxelType;
     readOnly?: boolean;
     voxels?: Voxel[];
+    highlightLayer?: number;
 }
 
-export const VoxelGrid = ({ activeColor, activeType, readOnly = false, voxels }: VoxelGridProps) => {
+export const VoxelGrid = ({ activeColor, activeType, readOnly = false, voxels, highlightLayer }: VoxelGridProps) => {
     const storeVoxels = useGameStore(state => state.playerVoxels);
     const addVoxel = useGameStore(state => state.addVoxel);
     const removeVoxel = useGameStore(state => state.removeVoxel);
@@ -91,6 +92,13 @@ export const VoxelGrid = ({ activeColor, activeType, readOnly = false, voxels }:
                     type={activeType}
                     isGhost
                 />
+            )}
+
+            {highlightLayer !== undefined && (
+                <mesh position={[2, highlightLayer, 2]} rotation={[-Math.PI / 2, 0, 0]}>
+                    <planeGeometry args={[5, 5]} />
+                    <meshBasicMaterial color="#00FFAA" transparent opacity={0.12} depthWrite={false} />
+                </mesh>
             )}
         </group>
     );

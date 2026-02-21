@@ -2,6 +2,70 @@ import { GoogleGenAI, Type } from '@google/genai';
 import type { Schema } from '@google/genai';
 import type { DirectorPlan } from '../store/types';
 
+export type DifficultyLevel = 'concrete' | 'stylised' | 'abstract' | 'vibe';
+
+export const DIFFICULTY_OPTIONS: { value: DifficultyLevel; label: string; description: string }[] = [
+    { value: 'concrete', label: '具象', description: '家・木・塔など、誰でもわかる形' },
+    { value: 'stylised', label: 'デフォルメ', description: '形はわかるが、色や配置に個性がある' },
+    { value: 'abstract', label: '抽象', description: '感情や概念を形で表現' },
+    { value: 'vibe', label: 'バイブス', description: 'テキストの雰囲気だけが手がかり' },
+];
+
+const difficultyPrompts: Record<DifficultyLevel, string> = {
+    concrete: `
+    You are a voxel artist. Build a clearly recognisable real-world object in a 5x5x5 grid.
+    Y axis is vertical (0 = ground, 4 = top).
+
+    RULES:
+    - Build something anyone can identify: a house, tree, chair, bridge, tower, castle, boat, mushroom, robot, etc.
+    - Blocks must be connected. Build from the ground up (y=0).
+    - Use realistic colours (brown for wood, green for leaves, red for brick, etc.)
+    - Use 15-35 blocks.
+    - The vibe_prompt should name the object poetically in Japanese (e.g. "森の奥にひっそり佇む小さな家")
+
+    Examples:
+    - House: floor at y=0, walls y=1-2, triangular roof y=3
+    - Tree: brown trunk at (2,0,2)→(2,2,2), green canopy around (2,3,2)
+    - Tower: narrow column with wider base, flag on top`,
+
+    stylised: `
+    You are a voxel artist with a unique style. Build a recognisable object in a 5x5x5 grid, but with creative liberties.
+    Y axis is vertical (0 = ground, 4 = top).
+
+    RULES:
+    - The shape should be identifiable but stylised — exaggerated proportions, unusual colours, artistic choices.
+    - Example: a tree with purple leaves, a house that leans, a robot with oversized head.
+    - Blocks must be connected. Build from ground up.
+    - Use 15-35 blocks.
+    - Use "emissive" blocks for dramatic effect.
+    - The vibe_prompt should describe the mood/style in Japanese (e.g. "夕焼けに染まる歪んだ灯台")`,
+
+    abstract: `
+    You are an abstract voxel sculptor. Create a structure in a 5x5x5 grid that represents a concept or emotion.
+    Y axis is vertical (0 = ground, 4 = top).
+
+    RULES:
+    - The structure represents an abstract idea: growth, chaos, balance, loneliness, celebration, tension, etc.
+    - It should NOT look like a specific real object — instead use form, colour, and space to convey feeling.
+    - Use interesting spatial arrangements: spirals, clusters, sparse floating connected pieces, gradients.
+    - Blocks should mostly be connected but can have deliberate gaps.
+    - Use 15-35 blocks.
+    - Use colour and emissive/transparent types to reinforce the concept.
+    - The vibe_prompt should describe the feeling in Japanese without naming any object (e.g. "静寂の中に芽生える不安")`,
+
+    vibe: `
+    You are a voxel artist creating pure atmosphere. Create a structure in a 5x5x5 grid.
+    Y axis is vertical (0 = ground, 4 = top).
+
+    RULES:
+    - Do NOT create anything recognisable. Pure form and colour.
+    - The player will only see a short poetic text hint — they must interpret the vibe and build.
+    - Focus on: density, verticality, warmth/coolness of colour, clustering vs scattering.
+    - Use 10-30 blocks.
+    - The vibe_prompt should be a cryptic, poetic, synesthetic Japanese phrase (e.g. "水底から聞こえる光の残響")
+    - This is the hardest difficulty — the prompt should be evocative but deliberately ambiguous.`,
+};
+
 const directorSchema: Schema = {
     type: Type.OBJECT,
     properties: {
@@ -31,7 +95,7 @@ const directorSchema: Schema = {
                 },
                 required: ["pos", "color", "type"]
             },
-            description: "List of voxels making up the hidden structure. Around 10-30 voxels."
+            description: "List of voxels making up the hidden structure."
         },
         vibe_vector: {
             type: Type.OBJECT,
@@ -47,7 +111,7 @@ const directorSchema: Schema = {
         },
         vibe_prompt: {
             type: Type.STRING,
-            description: "A short, poetic, abstract prompt in Japanese describing the vibe of the structure. (e.g., '水面に浮かぶネオンの残骸')"
+            description: "A short, poetic prompt in Japanese describing the vibe of the structure."
         },
         hint_svg: {
             type: Type.STRING,
@@ -70,23 +134,24 @@ const directorSchema: Schema = {
     required: ["grid_size", "voxels", "vibe_vector", "vibe_prompt", "hint_svg", "hint_foundation"]
 };
 
-export const generateGeminiDirectorPlan = async (apiKey: string): Promise<DirectorPlan> => {
+export const generateGeminiDirectorPlan = async (
+    apiKey: string,
+    difficulty: DifficultyLevel = 'concrete',
+): Promise<DirectorPlan> => {
     const ai = new GoogleGenAI({ apiKey });
 
-    const prompt = `
-    You are an AI Architect. Your task is to design a small 3D voxel structure within a 5x5x5 grid (coordinates 0 to 4).
-    The structure should represent a specific abstract concept, emotion, or "vibe".
-    
-    Guidelines:
-    - Keep the block count reasonable (10 to 30 blocks).
-    - Use colors and block types (standard, emissive, transparent) creatively to match the vibe.
-    - The vibe_prompt MUST be in Japanese and sounds poetic or slightly cyber/abstract.
-    - Important: Output strictly matching the requested JSON schema.
-  `;
+    const prompt = difficultyPrompts[difficulty] + `
+
+    OUTPUT FORMAT:
+    - grid_size must be [5, 5, 5]
+    - vibe_vector: rate each axis 0-4 based on the actual structure properties
+    - hint_svg: a simple SVG silhouette of the structure from the front
+    - hint_foundation: 1-5 starter blocks from the structure as a hint for the player
+    `;
 
     try {
         const response = await ai.models.generateContent({
-            model: 'gemini-3.0-flash',
+            model: 'gemini-2.5-flash',
             contents: prompt,
             config: {
                 responseMimeType: "application/json",

@@ -37,7 +37,7 @@ export const evaluateWithGemini = async (
 
     try {
         const response = await ai.models.generateContent({
-            model: 'gemini-1.5-pro',
+            model: 'gemini-2.5-flash',
             contents: [
                 { text: prompt },
                 { inlineData: { data: base64Data, mimeType: "image/png" } }

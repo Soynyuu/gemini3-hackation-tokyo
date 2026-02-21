@@ -1,21 +1,6 @@
-export type Vector3 = [number, number, number];
+export type { Vector3, VoxelType, Voxel, VibeVector } from 'microvoxel-5';
 
-export type VoxelType = 'standard' | 'emissive' | 'transparent';
-
-export interface Voxel {
-    pos: Vector3;
-    color: string;
-    type: VoxelType;
-}
-
-export interface VibeVector {
-    warmth: number;
-    density: number;
-    focus: number;
-    randomness: number;
-    saturation: number;
-    verticality: number;
-}
+import type { Voxel, Vector3, VibeVector } from 'microvoxel-5';
 
 export interface DirectorPlan {
     grid_size: Vector3;
@@ -35,7 +20,6 @@ export interface GameState {
     timeRemaining: number;
     apiKey: string | null;
 
-    // Actions
     setPhase: (phase: GamePhase) => void;
     setDirectorPlan: (plan: DirectorPlan) => void;
     addVoxel: (voxel: Voxel) => void;
