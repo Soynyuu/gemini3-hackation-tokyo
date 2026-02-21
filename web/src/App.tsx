@@ -73,6 +73,7 @@ function Game() {
   const [vibeCodingLevel, setVibeCodingLevel] = useState<VibeCodingLevel>('junior-pm');
   const [showStartModal, setShowStartModal] = useState(false);
   const [timerFrozen, setTimerFrozen] = useState(false);
+  const [revealTab, setRevealTab] = useState<'timeline' | 'model'>('timeline');
 
   const { buildStartTimeRef, fireInterruption } = useInterruptionScheduler();
   const pendingFireRef = useRef(false);
@@ -440,25 +441,60 @@ function Game() {
           </div>
 
           {isVibeCoding ? (
-            <div className="relative flex flex-col p-4 md:p-6 overflow-y-auto">
-              <div className="font-mono font-bold text-sm md:text-xl text-cyber-accent mb-4">指示変遷タイムライン</div>
-              <div className="space-y-2">
-                <div className="p-2 md:p-3 rounded-lg border border-cyber-border">
-                  <span className="text-cyber-muted font-mono text-[10px] md:text-xs">0:00</span>
-                  <span className="ml-2 text-white text-xs md:text-sm">初期: 「{directorPlan.vibe_prompt}」</span>
-                </div>
-                {vibeCodingState?.interruptions.map((intr, i) => (
-                  <div key={intr.id} className={`p-2 md:p-3 rounded-lg border text-xs md:text-sm ${moodColors[intr.mood]} ${moodBg[intr.mood]}`}>
-                    <span className="text-cyber-muted font-mono text-[10px] md:text-xs">
-                      {Math.floor(intr.timestamp / 60)}:{(intr.timestamp % 60).toString().padStart(2, '0')}
-                    </span>
-                    <span className="ml-2 text-white">「{intr.message}」</span>
-                    {i === (vibeCodingState?.interruptions.length ?? 0) - 1 && (
-                      <span className="ml-1 text-[10px] text-cyber-accent font-mono">← 最終指示</span>
-                    )}
-                  </div>
-                ))}
+            <div className="relative flex flex-col h-full">
+              <div className="flex border-b border-cyber-border">
+                <button
+                  onClick={() => setRevealTab('timeline')}
+                  className={`flex-1 py-2.5 text-xs md:text-sm font-mono font-bold uppercase tracking-widest transition-colors ${
+                    revealTab === 'timeline'
+                      ? 'text-cyber-accent border-b-2 border-cyber-accent bg-cyber-accent/10'
+                      : 'text-cyber-muted hover:text-white'
+                  }`}
+                >
+                  指示タイムライン
+                </button>
+                <button
+                  onClick={() => setRevealTab('model')}
+                  className={`flex-1 py-2.5 text-xs md:text-sm font-mono font-bold uppercase tracking-widest transition-colors ${
+                    revealTab === 'model'
+                      ? 'text-cyber-accent border-b-2 border-cyber-accent bg-cyber-accent/10'
+                      : 'text-cyber-muted hover:text-white'
+                  }`}
+                >
+                  ディレクターの理想
+                </button>
               </div>
+              {revealTab === 'timeline' ? (
+                <div className="flex-grow p-4 md:p-6 overflow-y-auto">
+                  <div className="space-y-2">
+                    <div className="p-2 md:p-3 rounded-lg border border-cyber-border">
+                      <span className="text-cyber-muted font-mono text-[10px] md:text-xs">0:00</span>
+                      <span className="ml-2 text-white text-xs md:text-sm">初期: 「{directorPlan.vibe_prompt}」</span>
+                    </div>
+                    {vibeCodingState?.interruptions.map((intr, i) => (
+                      <div key={intr.id} className={`p-2 md:p-3 rounded-lg border text-xs md:text-sm ${moodColors[intr.mood]} ${moodBg[intr.mood]}`}>
+                        <span className="text-cyber-muted font-mono text-[10px] md:text-xs">
+                          {Math.floor(intr.timestamp / 60)}:{(intr.timestamp % 60).toString().padStart(2, '0')}
+                        </span>
+                        <span className="ml-2 text-white">「{intr.message}」</span>
+                        {i === (vibeCodingState?.interruptions.length ?? 0) - 1 && (
+                          <span className="ml-1 text-[10px] text-cyber-accent font-mono">← 最終指示</span>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ) : (
+                <div className="flex-grow min-h-[300px] md:min-h-[400px]">
+                  <Canvas camera={{ position: [6, 6, 6], fov: 40 }}>
+                    <ambientLight intensity={0.5} />
+                    <directionalLight position={[10, 10, 5]} intensity={1.5} />
+                    <Environment preset="city" />
+                    <VoxelGrid activeColor="#fff" activeType="standard" readOnly voxels={directorPlan.voxels} />
+                    <OrbitControls autoRotate autoRotateSpeed={2} />
+                  </Canvas>
+                </div>
+              )}
             </div>
           ) : (
             <div className="relative flex flex-col">
