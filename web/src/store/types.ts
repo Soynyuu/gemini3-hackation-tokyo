@@ -22,6 +22,8 @@ export interface DirectorPlan {
     voxels: Voxel[];
     vibe_vector: VibeVector;
     vibe_prompt: string;
+    hint_svg?: string;
+    hint_foundation?: Voxel[];
 }
 
 export type GamePhase = 'title' | 'build' | 'reveal';
@@ -31,6 +33,7 @@ export interface GameState {
     directorPlan: DirectorPlan | null;
     playerVoxels: Voxel[];
     timeRemaining: number;
+    apiKey: string | null;
 
     // Actions
     setPhase: (phase: GamePhase) => void;
@@ -39,4 +42,5 @@ export interface GameState {
     removeVoxel: (pos: Vector3) => void;
     clearVoxels: () => void;
     setTimeRemaining: (time: number) => void;
+    setApiKey: (key: string) => void;
 }
