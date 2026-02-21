@@ -44,14 +44,14 @@ const TEXT = {
       <>
         AIが{role}になり、
         <br className="hidden sm:block" />
-        人間がその「バイブス」を<span className="text-white font-semibold">建築</span>する。
+        人間がその「バイブス」を<span className="text-cyber-text dark:text-white font-semibold">建築</span>する。
       </>
     ),
     en: (role: React.ReactNode) => (
       <>
         The AI becomes the {role},
         <br className="hidden sm:block" />
-        and humans <span className="text-white font-semibold">build</span> its vibes.
+        and humans <span className="text-cyber-text dark:text-white font-semibold">build</span> its vibes.
       </>
     ),
   },
@@ -77,14 +77,14 @@ const TEXT = {
       <>
         普段、私たちはAIに言葉で指示を出す。
         <br />
-        このゲームでは、その関係が<span className="text-white font-semibold">逆転</span>する。
+        このゲームでは、その関係が<span className="text-cyber-text dark:text-white font-semibold">逆転</span>する。
       </>
     ),
     en: (
       <>
         Normally, we give instructions to AI with words.
         <br />
-        In this game, that relationship is <span className="text-white font-semibold">reversed</span>.
+        In this game, that relationship is <span className="text-cyber-text dark:text-white font-semibold">reversed</span>.
       </>
     ),
   },
@@ -383,10 +383,10 @@ function FlowDiagram() {
   return (
     <div className="flex items-center justify-center gap-3 font-mono text-sm">
       <div className="flex flex-col items-center gap-1">
-        <div className="w-14 h-14 rounded-lg bg-cyber-secondary/20 border border-cyber-secondary/50 flex items-center justify-center text-2xl">
+        <div className="w-14 h-14 rounded-lg bg-cyber-secondary/30 dark:bg-cyber-secondary/20 border border-cyber-secondary/50 flex items-center justify-center text-2xl font-bold text-cyber-text dark:text-white">
           AI
         </div>
-        <span className="text-cyber-secondary text-xs">LLM</span>
+        <span className="text-cyber-secondary text-xs font-bold">LLM</span>
       </div>
 
       <div className="flex flex-col items-center gap-1">
@@ -412,10 +412,10 @@ function FlowDiagram() {
       </div>
 
       <div className="flex flex-col items-center gap-1">
-        <div className="w-14 h-14 rounded-lg bg-cyber-primary/20 border border-cyber-primary/50 flex items-center justify-center text-2xl">
+        <div className="w-14 h-14 rounded-lg bg-cyber-primary/30 dark:bg-cyber-primary/20 border border-cyber-primary/50 flex items-center justify-center text-2xl font-bold text-cyber-text dark:text-white">
           You
         </div>
-        <span className="text-cyber-primary text-xs">Human</span>
+        <span className="text-cyber-primary text-xs font-bold">Human</span>
       </div>
     </div>
   );
@@ -450,8 +450,8 @@ export default function Teaser() {
         <LangToggle />
 
         {/* Grid background */}
-        <div className="fixed inset-0 bg-[linear-gradient(to_right,theme('colors.cyber.border')_1px,transparent_1px),linear-gradient(to_bottom,theme('colors.cyber.border')_1px,transparent_1px)] bg-[size:32px_32px] opacity-[0.08] pointer-events-none" />
-        <div className="fixed inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,theme('colors.cyber.primary')_0.1,transparent)] opacity-10 pointer-events-none" />
+        <div className="fixed inset-0 bg-[linear-gradient(to_right,theme('colors.cyber.border')_1px,transparent_1px),linear-gradient(to_bottom,theme('colors.cyber.border')_1px,transparent_1px)] bg-[size:32px_32px] opacity-[0.15] dark:opacity-[0.08] pointer-events-none" />
+        <div className="fixed inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,theme('colors.cyber.primary')_0.2,transparent)] dark:bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,theme('colors.cyber.primary')_0.1,transparent)] opacity-20 dark:opacity-10 pointer-events-none" />
 
         {/* Hero */}
         <section className="relative min-h-screen flex flex-col items-center justify-center px-6">
@@ -466,13 +466,13 @@ export default function Teaser() {
             </div>
 
             <h1 className="text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-black tracking-tighter leading-[0.9] mb-6">
-              <span className="bg-gradient-to-r from-zinc-300 via-white to-zinc-500 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-zinc-500 via-zinc-800 to-zinc-500 dark:from-zinc-300 dark:via-white dark:to-zinc-500 bg-clip-text text-transparent">
                 VIBE
               </span>
               <br />
               <GlitchText
                 text="ARCHITECT"
-                className="text-white"
+                className="text-cyber-text dark:text-white"
               />
             </h1>
 
@@ -485,8 +485,8 @@ export default function Teaser() {
 
           {/* Scroll indicator */}
           <div className="absolute bottom-8 flex flex-col items-center gap-2 animate-bounce-slow">
-            <span className="text-cyber-muted text-xs font-mono tracking-widest">SCROLL</span>
-            <svg width="16" height="24" viewBox="0 0 16 24" className="text-cyber-muted">
+            <span className="text-cyber-text/60 dark:text-white/60 text-xs font-mono tracking-widest">SCROLL</span>
+            <svg width="16" height="24" viewBox="0 0 16 24" className="text-cyber-text/60 dark:text-white/60">
               <path d="M8 4 L8 18 M3 14 L8 19 L13 14" stroke="currentColor" strokeWidth="1.5" fill="none" />
             </svg>
           </div>
@@ -569,9 +569,9 @@ export default function Teaser() {
               {l(TEXT.vibeLabel)}
             </h2>
             <p className="text-cyber-muted mb-8">{l(TEXT.vibeDesc)}</p>
-            <div className="p-8 rounded-xl border border-cyber-border bg-black/40 backdrop-blur-sm">
+            <div className="p-8 rounded-xl border border-cyber-border bg-cyber-surface/40 dark:bg-black/40 backdrop-blur-sm">
               <div className="font-mono text-xs text-cyber-muted mb-3">$ director --transmit</div>
-              <div className="text-2xl sm:text-3xl font-black">
+              <div className="text-2xl sm:text-3xl font-black text-cyber-text dark:text-white">
                 <VibeStream />
               </div>
             </div>
@@ -586,7 +586,7 @@ export default function Teaser() {
 
             <a
               href="#/game"
-              className="group relative inline-flex items-center gap-3 px-12 py-5 bg-transparent font-bold text-white uppercase tracking-widest overflow-hidden rounded-md border border-cyber-border hover:border-cyber-primary transition-colors"
+              className="group relative inline-flex items-center gap-3 px-12 py-5 bg-transparent font-bold text-cyber-text dark:text-white uppercase tracking-widest overflow-hidden rounded-md border border-cyber-border hover:border-cyber-primary transition-colors"
             >
               <div className="absolute inset-0 w-0 bg-cyber-primary transition-all duration-300 ease-out group-hover:w-full opacity-20" />
               <span className="relative text-xl group-hover:text-cyber-primary transition-colors">

@@ -77,7 +77,7 @@ export const SliceEditor = ({
         <button
           onClick={() => setActiveLayer(Math.min(GRID_SIZE - 1, activeLayer + 1))}
           disabled={activeLayer >= GRID_SIZE - 1}
-          className="p-1.5 rounded-lg bg-cyber-surface border border-cyber-border text-cyber-muted hover:text-white hover:border-cyber-primary disabled:opacity-30 disabled:hover:text-cyber-muted disabled:hover:border-cyber-border transition-colors"
+          className="p-1.5 rounded-lg bg-cyber-surface border border-cyber-border text-cyber-muted hover:text-cyber-text dark:hover:text-white hover:border-cyber-primary disabled:opacity-30 disabled:hover:text-cyber-muted disabled:hover:border-cyber-border transition-colors"
         >
           <ChevronUp size={18} />
         </button>
@@ -87,11 +87,10 @@ export const SliceEditor = ({
             <button
               key={i}
               onClick={() => setActiveLayer(i)}
-              className={`w-8 h-8 rounded-md text-xs font-mono font-bold transition-all ${
-                activeLayer === i
+              className={`w-8 h-8 rounded-md text-xs font-mono font-bold transition-all ${activeLayer === i
                   ? 'bg-cyber-primary text-black scale-110'
-                  : 'bg-cyber-surface border border-cyber-border text-cyber-muted hover:text-white hover:border-cyber-primary'
-              }`}
+                  : 'bg-cyber-surface border border-cyber-border text-cyber-muted hover:text-cyber-text dark:hover:text-white hover:border-cyber-primary'
+                }`}
             >
               {i}
             </button>
@@ -101,7 +100,7 @@ export const SliceEditor = ({
         <button
           onClick={() => setActiveLayer(Math.max(0, activeLayer - 1))}
           disabled={activeLayer <= 0}
-          className="p-1.5 rounded-lg bg-cyber-surface border border-cyber-border text-cyber-muted hover:text-white hover:border-cyber-primary disabled:opacity-30 disabled:hover:text-cyber-muted disabled:hover:border-cyber-border transition-colors"
+          className="p-1.5 rounded-lg bg-cyber-surface border border-cyber-border text-cyber-muted hover:text-cyber-text dark:hover:text-white hover:border-cyber-primary disabled:opacity-30 disabled:hover:text-cyber-muted disabled:hover:border-cyber-border transition-colors"
         >
           <ChevronDown size={18} />
         </button>
@@ -147,13 +146,12 @@ export const SliceEditor = ({
                 <button
                   key={`${x}-${z}`}
                   onClick={() => handleCellClick(x, z)}
-                  className={`rounded-sm transition-all duration-100 border ${
-                    hasCurrent
-                      ? 'border-white/20 hover:border-white/50'
+                  className={`rounded-sm transition-all duration-100 border ${hasCurrent
+                      ? 'border-black/20 dark:border-white/20 hover:border-black/50 dark:hover:border-white/50'
                       : ghost
                         ? 'border-cyber-border/50 hover:border-cyber-primary/50'
                         : 'border-transparent hover:border-cyber-primary/30'
-                  }`}
+                    }`}
                   style={cellStyle(current, ghost)}
                   title={`[${x}, ${activeLayer}, ${z}]${hasCurrent ? ` ${current!.type}` : ''}`}
                 />
