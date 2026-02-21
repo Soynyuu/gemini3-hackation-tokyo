@@ -61,7 +61,7 @@ function Game() {
   const initVibeCodingState = useGameStore((s) => s.initVibeCodingState);
   const resetVibeCodingState = useGameStore((s) => s.resetVibeCodingState);
 
-  const [activeColor, setActiveColor] = useState('#FF3B30');
+  const [activeColor, setActiveColor] = useState('#EF4444');
   const [activeType, setActiveType] = useState<VoxelType>('standard');
   const [activeLayer, setActiveLayer] = useState(0);
   const [isGenerating, setIsGenerating] = useState(false);

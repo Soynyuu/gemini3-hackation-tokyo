@@ -156,6 +156,7 @@ export const generateGeminiDirectorPlan = async (
     - vibe_vector: rate each axis 0-4 based on the actual structure properties
     - hint_svg: a simple SVG silhouette of the structure from the front
     - hint_foundation: 1-5 starter blocks from the structure as a hint for the player
+    - IMPORTANT: The 'vibe_prompt' field MUST be in Japanese. No English allowed in this field.
     `;
 
     try {

@@ -4,7 +4,7 @@ type Lang = 'ja' | 'en';
 
 const LangContext = createContext<{ lang: Lang; toggle: () => void }>({
   lang: 'ja',
-  toggle: () => {},
+  toggle: () => { },
 });
 
 function useLang() {
@@ -240,9 +240,8 @@ function VibeStream() {
   return (
     <div className="h-8 overflow-hidden">
       <span
-        className={`font-mono text-cyber-primary transition-all duration-400 ${
-          fade ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2'
-        }`}
+        className={`font-mono text-cyber-primary transition-all duration-400 ${fade ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2'
+          }`}
       >
         &gt; {words[currentIndex]}
       </span>
@@ -291,7 +290,7 @@ function VoxelCanvas() {
     canvas.height = size * dpr;
     ctx.scale(dpr, dpr);
 
-    const colors = ['#00FFAA', '#7000FF', '#FF0055', '#0A84FF', '#FF9500'];
+    const colors = ['#4F8AFF', '#A855F7', '#F43F5E', '#3B82F6', '#EC4899'];
     const voxels: { x: number; y: number; z: number; color: string; delay: number }[] = [];
 
     for (let i = 0; i < 20; i++) {
@@ -394,8 +393,8 @@ function FlowDiagram() {
         <svg width="60" height="24" viewBox="0 0 60 24" className="text-cyber-primary">
           <defs>
             <linearGradient id="arrowGrad" x1="0" y1="0" x2="1" y2="0">
-              <stop offset="0%" stopColor="#7000FF" />
-              <stop offset="100%" stopColor="#00FFAA" />
+              <stop offset="0%" stopColor="#A855F7" />
+              <stop offset="100%" stopColor="#4F8AFF" />
             </linearGradient>
           </defs>
           <line
@@ -407,7 +406,7 @@ function FlowDiagram() {
             strokeWidth="2"
             className="animate-dash"
           />
-          <polygon points="48,6 60,12 48,18" fill="#00FFAA" />
+          <polygon points="48,6 60,12 48,18" fill="#4F8AFF" />
         </svg>
         <span className="text-cyber-muted text-[10px] tracking-wider">VIBE</span>
       </div>
@@ -457,9 +456,8 @@ export default function Teaser() {
         {/* Hero */}
         <section className="relative min-h-screen flex flex-col items-center justify-center px-6">
           <div
-            className={`text-center transition-all duration-1000 ${
-              loaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-            }`}
+            className={`text-center transition-all duration-1000 ${loaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+              }`}
           >
             <div className="inline-block px-4 py-1.5 mb-8 rounded-full border border-cyber-border bg-cyber-surface/60 backdrop-blur-sm">
               <span className="font-mono text-xs tracking-widest text-cyber-muted uppercase">
