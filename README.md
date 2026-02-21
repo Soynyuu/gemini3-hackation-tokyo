@@ -91,6 +91,42 @@ Keep the first demo local and offline-capable (mock LLM outputs) so we can itera
 - Rendering: keep lighting neutral and deterministic; use an orthographic camera for fair screen-space comparisons.
 - Local-first dev: implement a mock director generator and an offline-scoring function so we can demo without external APIs.
 
+## Quick Start (Web)
+
+このプロジェクトは現在 Cloudflare Pages にデプロイされています。
+
+🌍 **Live Demo**: [https://gemini-vibe-architect.pages.dev](https://gemini-vibe-architect.pages.dev)
+
+### 遊び方
+1. 上記URLにアクセスします。
+2. タイトル画面で **Gemini API Key** を入力します。（キーはブラウザの `localStorage` にのみ保存されます）
+3. 「接続を開始する」ボタンを押すと、Geminiがランダムなお題（バイブス）と構造を生成します。
+4. 制限時間内にお題に沿った3D構造を構築してください。
+5. 終了後、Gemini Pro Vision があなたの作品を視覚的に解析し、適合スコアとフィードバックを提供します。
+
+## Local Development / Deployment
+
+### セットアップ
+```bash
+cd web
+npm install
+```
+
+### 開発サーバーの起動
+```bash
+npm run dev
+```
+
+### デプロイ (Cloudflare Pages)
+Wrangler を使用してデプロイします。
+```bash
+npm run build
+npx wrangler pages deploy dist --project-name gemini-vibe-architect
+```
+
+---
+*Created for Gemini 3 Hackathon Tokyo 2026*
+
 ## Next steps (MVP roadmap)
 1. Finalize 6–8 vibe axes and discrete levels.
 2. Implement the Tile Board digital prototype and a small React UI (`/web/tile-board`).
