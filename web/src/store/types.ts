@@ -1,6 +1,6 @@
-export type { Vector3, VoxelType, Voxel, VibeVector } from '@vibe-architect/voxel-core';
+export type { Vector3, VoxelType, Voxel, VibeVector } from 'microvoxel-5';
 
-import type { Voxel, Vector3, VibeVector } from '@vibe-architect/voxel-core';
+import type { Voxel, Vector3, VibeVector } from 'microvoxel-5';
 
 export interface DirectorPlan {
     grid_size: Vector3;

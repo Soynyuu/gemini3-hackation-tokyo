@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { placeVoxel, removeVoxel } from '@vibe-architect/voxel-core';
+import { placeVoxel, removeVoxel } from 'microvoxel-5';
 import type { GameState, GamePhase, DirectorPlan, Voxel, Vector3 } from './types';
 
 export const useGameStore = create<GameState>((set) => ({
@@ -29,7 +29,8 @@ export const useGameStore = create<GameState>((set) => ({
     setTimeRemaining: (time: number) => set({ timeRemaining: time }),
 
     setApiKey: (key: string) => {
-        localStorage.setItem('gemini_api_key', key);
-        set({ apiKey: key });
+        const trimmed = key.trim();
+        localStorage.setItem('gemini_api_key', trimmed);
+        set({ apiKey: trimmed });
     }
 }));

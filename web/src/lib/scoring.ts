@@ -1,1 +1,1 @@
-export { calculateScores } from '@vibe-architect/voxel-core';
+export { calculateScores } from 'microvoxel-5';

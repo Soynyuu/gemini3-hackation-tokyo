@@ -1,1 +1,1 @@
-export { generateMockDirectorPlan } from '@vibe-architect/voxel-core';
+export { generateMockDirectorPlan } from 'microvoxel-5';
