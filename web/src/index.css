@@ -1,0 +1,49 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-cyber-background text-cyber-text font-sans antialiased m-0 p-0 selection:bg-cyber-primary selection:text-cyber-background;
+  }
+
+  body.game-mode {
+    @apply overflow-hidden;
+  }
+}
+
+/* Custom Webkit Scrollbar for premium feel */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: theme('colors.cyber.background');
+}
+::-webkit-scrollbar-thumb {
+  background: theme('colors.cyber.border');
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: theme('colors.cyber.muted');
+}
+
+/* Teaser page animations */
+@keyframes bounce-slow {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(6px); }
+}
+
+@keyframes dash {
+  to { stroke-dashoffset: 0; }
+}
+
+.animate-bounce-slow {
+  animation: bounce-slow 2s ease-in-out infinite;
+}
+
+.animate-dash {
+  stroke-dasharray: 8 4;
+  stroke-dashoffset: 48;
+  animation: dash 1.5s linear infinite;
+}
