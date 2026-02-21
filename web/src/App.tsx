@@ -2,7 +2,8 @@ import { useState, useEffect, useCallback } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, Environment, ContactShadows } from '@react-three/drei';
 import { useGameStore } from './store/gameStore';
-import { generateGeminiDirectorPlan } from './lib/geminiDirector';
+import { generateGeminiDirectorPlan, DIFFICULTY_OPTIONS, type DifficultyLevel } from './lib/geminiDirector';
+import { generateMockDirectorPlan } from './lib/mockDirector';
 import { calculateScores } from './lib/scoring';
 import { evaluateWithGemini } from './lib/geminiJudge';
 import { VoxelGrid } from './components/3d/VoxelGrid';
@@ -43,6 +44,7 @@ function Game() {
   const [isGenerating, setIsGenerating] = useState(false);
   const [isEvaluating, setIsEvaluating] = useState(false);
   const [aiEvalResult, setAiEvalResult] = useState<{ vibeScore: number, rationale: string } | null>(null);
+  const [difficulty, setDifficulty] = useState<DifficultyLevel>('concrete');
 
   useEffect(() => {
     document.body.classList.add('game-mode');
@@ -50,17 +52,20 @@ function Game() {
   }, []);
 
   const startRound = async () => {
-    if (!apiKey) return;
-
     setIsGenerating(true);
     try {
-      const plan = await generateGeminiDirectorPlan(apiKey);
+      const plan = apiKey
+        ? await generateGeminiDirectorPlan(apiKey, difficulty)
+        : generateMockDirectorPlan();
       setDirectorPlan(plan);
       setTimeRemaining(120);
       setPhase('build');
     } catch (e) {
       console.error(e);
-      alert("Failed to connect to AI Director. Check your API key.");
+      const plan = generateMockDirectorPlan();
+      setDirectorPlan(plan);
+      setTimeRemaining(120);
+      setPhase('build');
     } finally {
       setIsGenerating(false);
     }
@@ -84,18 +89,35 @@ function Game() {
         </p>
 
         <div className="flex flex-col gap-4 items-center">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-2 w-full max-w-lg mb-4">
+            {DIFFICULTY_OPTIONS.map((opt) => (
+              <button
+                key={opt.value}
+                onClick={() => setDifficulty(opt.value)}
+                className={`px-3 py-3 rounded border text-sm font-mono transition-all ${
+                  difficulty === opt.value
+                    ? 'border-cyber-primary bg-cyber-primary/20 text-cyber-primary'
+                    : 'border-cyber-border bg-cyber-surface/50 text-cyber-muted hover:border-cyber-muted'
+                }`}
+              >
+                <div className="font-bold text-base">{opt.label}</div>
+                <div className="text-[10px] mt-1 opacity-70">{opt.description}</div>
+              </button>
+            ))}
+          </div>
+
           <button
             onClick={startRound}
             className="group relative px-12 py-4 bg-transparent font-bold text-white uppercase tracking-widest overflow-hidden rounded-md border border-cyber-border hover:border-cyber-primary transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-            disabled={!useGameStore.getState().apiKey || isGenerating}
+            disabled={isGenerating}
           >
-            <div className={`absolute inset-0 w-0 transition-all duration-[250ms] ease-out group-hover:w-full opacity-20 ${useGameStore.getState().apiKey ? 'bg-cyber-primary' : 'bg-transparent'}`}></div>
-            <span className={`relative text-xl transition-colors ${useGameStore.getState().apiKey ? 'group-hover:text-cyber-primary' : 'text-cyber-muted'}`}>
-              {!useGameStore.getState().apiKey
-                ? 'APIキーが必要です'
-                : isGenerating
-                  ? 'リンク生成中...'
-                  : '接続を開始する'}
+            <div className="absolute inset-0 w-0 transition-all duration-[250ms] ease-out group-hover:w-full opacity-20 bg-cyber-primary"></div>
+            <span className="relative text-xl transition-colors group-hover:text-cyber-primary">
+              {isGenerating
+                ? '生成中...'
+                : apiKey
+                  ? '接続を開始する'
+                  : 'モックモードで開始'}
             </span>
           </button>
 
@@ -103,8 +125,8 @@ function Game() {
             <label className="text-xs text-cyber-muted uppercase tracking-wider font-mono">Gemini API Key</label>
             <input
               type="password"
-              placeholder="AI_zaSy..."
-              defaultValue={useGameStore.getState().apiKey || ''}
+              placeholder="AIzaSy..."
+              value={apiKey || ''}
               onChange={(e) => useGameStore.getState().setApiKey(e.target.value)}
               className="w-full bg-cyber-surface border border-cyber-border rounded px-4 py-2 text-cyber-text text-sm font-mono focus:outline-none focus:border-cyber-primary"
             />
@@ -151,7 +173,7 @@ function Game() {
     const scores = calculateScores(playerVoxels, directorPlan);
 
     const finalVibeScore = aiEvalResult ? aiEvalResult.vibeScore : scores.vibeScore;
-    const finalRationale = aiEvalResult ? aiEvalResult.rationale : scores.rationale;
+    const finalRationale = aiEvalResult ? aiEvalResult.rationale : 'AI解析を待機中...';
 
     return (
       <div className="h-screen w-screen flex flex-col bg-cyber-background text-white overflow-y-auto">
