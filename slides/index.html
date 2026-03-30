@@ -11,15 +11,19 @@
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=JetBrains+Mono:wght@400;700&family=Noto+Sans+JP:wght@400;700;900&display=swap');
 
     :root {
-      --cyber-primary: #00B377;
-      --cyber-secondary: #6200EA;
-      --cyber-accent: #D50040;
-      --cyber-bg: #F8FAFB;
-      --cyber-surface: #FFFFFF;
-      --cyber-muted: #6B7A8D;
-      --cyber-border: #E0E6ED;
-      --cyber-text: #1A2332;
-      --cyber-text-sub: #3A4A5C;
+      --cyber-primary: #FF6B00;
+      /* Tactical Orange */
+      --cyber-secondary: #52525B;
+      /* Zinc Grey */
+      --cyber-accent: #0891B2;
+      /* Architectural Cyan */
+      --cyber-bg: #1A1B1F;
+      /* Monolith Charcoal */
+      --cyber-surface: #26282E;
+      --cyber-muted: #71717A;
+      --cyber-border: #3F3F46;
+      --cyber-text: #F4F4F5;
+      --cyber-text-sub: #A1A1AA;
     }
 
     .reveal {
@@ -66,6 +70,15 @@
 
     .reveal .slide-background {
       background: var(--cyber-bg) !important;
+    }
+
+    .reveal .slide-background::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+      opacity: 0.05;
+      pointer-events: none;
     }
 
     .gradient-primary {
@@ -261,7 +274,7 @@
       border: 1px solid var(--cyber-border);
       border-radius: 12px;
       background: var(--cyber-surface);
-      box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
     }
 
     .center-slide {
@@ -270,6 +283,7 @@
       align-items: center;
       justify-content: center;
       text-align: center;
+      height: 100%;
     }
 
     .stat-row {
@@ -353,7 +367,7 @@
       font-size: 0.7em;
       color: var(--cyber-text-sub);
       font-style: italic;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
     }
 
     .speech-bubble::after {
@@ -406,28 +420,33 @@
       <!-- ============================================ -->
       <!-- SLIDE 1: TITLE -->
       <!-- ============================================ -->
-      <section class="center-slide" data-background-color="#F8FAFB">
-        <div class="glow-bg" style="top:-30%;left:-15%;background:rgba(98,0,234,0.08)"></div>
-        <div class="glow-bg" style="bottom:-30%;right:-15%;background:rgba(0,179,119,0.08)"></div>
+      <section class="center-slide">
+        <div class="glow-bg" style="top:-30%;left:-15%;background:rgba(255,107,0,0.1)"></div>
+        <div class="glow-bg" style="bottom:-30%;right:-15%;background:rgba(8,145,178,0.1)"></div>
 
-        <div class="badge" style="margin-bottom:24px;">Gemini 3 Hackathon Tokyo</div>
+        <div class="badge"
+          style="margin-bottom:32px; border-color: var(--cyber-primary); color: var(--cyber-primary); background: transparent;">
+          Gemini 3 Hackathon Tokyo</div>
 
-        <h1 style="margin-bottom:16px;">
+        <h1 style="margin-bottom:24px; font-size: 5.5em; letter-spacing: -0.05em;">
+          <span style="display:block; color: var(--cyber-text); opacity: 0.9;">VIBE</span>
           <span
-            style="display:block;background:linear-gradient(to right,#1A2332,#6B7A8D);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">VIBE</span>
-          <span class="gradient-accent" style="display:block;">ARCHITECT</span>
+            style="display:block; background: linear-gradient(135deg, #FF6B00, #FF8800, #FF6B00); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; filter: drop-shadow(0 0 20px rgba(255,107,0,0.3));">ARCHITECT</span>
         </h1>
 
-        <p style="font-size:0.7em;color:var(--cyber-muted);max-width:600px;margin:0 auto;line-height:1.6;">
+        <div style="width: 100px; height: 1px; background: var(--cyber-border); margin: 24px 0;"></div>
+
+        <p
+          style="font-size:0.8em; color:var(--cyber-text-sub); max-width:700px; margin:0 auto; line-height:1.6; font-weight: 400;">
           AIが指示し、人間が建築する。<br />
-          「伝える力」を鍛える、LLM時代の感性ゲーム。
+          <span style="color: var(--cyber-text);">「伝える力」</span>を鍛える、LLM時代の感性ゲーム。
         </p>
       </section>
 
       <!-- ============================================ -->
       <!-- SLIDE 2: ORIGIN STORY -->
       <!-- ============================================ -->
-      <section data-background-color="#F8FAFB">
+      <section class="center-slide">
         <h2>
           開発<span class="text-secondary">秘話</span>
         </h2>
@@ -478,7 +497,7 @@
       <!-- ============================================ -->
       <!-- SLIDE 3: HOW IT WORKS -->
       <!-- ============================================ -->
-      <section data-background-color="#F8FAFB">
+      <section class="center-slide">
         <h2>
           <span class="text-primary">120</span>秒の感性チャレンジ
         </h2>
@@ -524,7 +543,7 @@
       <!-- ============================================ -->
       <!-- SLIDE 4: WHAT YOU LEARN -->
       <!-- ============================================ -->
-      <section data-background-color="#F8FAFB">
+      <section class="center-slide">
         <h2>
           遊ぶだけじゃない。<span class="gradient-primary">学べる</span>。
         </h2>
@@ -603,7 +622,7 @@
       <!-- ============================================ -->
       <!-- SLIDE 5: SCORING -->
       <!-- ============================================ -->
-      <section data-background-color="#F8FAFB">
+      <section class="center-slide">
         <h2>
           二軸スコアリング &amp; <span class="gradient-primary">VibeVector</span>
         </h2>
@@ -614,9 +633,12 @@
 
             <div class="card" style="margin-bottom:16px;padding:20px 24px;">
               <div style="display:flex;align-items:center;gap:16px;margin-bottom:10px;">
-                <div style="font-family:'JetBrains Mono',monospace;font-size:0.8em;font-weight:700;color:#0A84FF;">60%</div>
+                <div style="font-family:'JetBrains Mono',monospace;font-size:0.8em;font-weight:700;color:#0A84FF;">60%
+                </div>
                 <div style="flex:1;height:14px;background:#EDF1F5;border-radius:7px;overflow:hidden;">
-                  <div style="width:60%;background:linear-gradient(90deg,#B0D4F1,#0A84FF);height:100%;border-radius:7px;"></div>
+                  <div
+                    style="width:60%;background:linear-gradient(90deg,#B0D4F1,#0A84FF);height:100%;border-radius:7px;">
+                  </div>
                 </div>
               </div>
               <div style="font-size:0.8em;font-weight:700;margin-bottom:6px;">構造一致 (Jaccard 係数)</div>
@@ -628,9 +650,13 @@
 
             <div class="card" style="padding:20px 24px;">
               <div style="display:flex;align-items:center;gap:16px;margin-bottom:10px;">
-                <div style="font-family:'JetBrains Mono',monospace;font-size:0.8em;font-weight:700;color:var(--cyber-accent);">40%</div>
+                <div
+                  style="font-family:'JetBrains Mono',monospace;font-size:0.8em;font-weight:700;color:var(--cyber-accent);">
+                  40%</div>
                 <div style="flex:1;height:14px;background:#EDF1F5;border-radius:7px;overflow:hidden;">
-                  <div style="width:40%;background:linear-gradient(90deg,var(--cyber-secondary),var(--cyber-accent));height:100%;border-radius:7px;"></div>
+                  <div
+                    style="width:40%;background:linear-gradient(90deg,var(--cyber-secondary),var(--cyber-accent));height:100%;border-radius:7px;">
+                  </div>
                 </div>
               </div>
               <div style="font-size:0.8em;font-weight:700;margin-bottom:6px;">Vibe適合度 (VibeVector距離)</div>
@@ -647,12 +673,30 @@
               <span class="text-muted" style="font-weight:400;font-size:0.7em;"> — 6軸の美的記述子</span>
             </h3>
             <div class="vibe-vector-grid" style="gap:12px;">
-              <div class="vv-axis"><div class="label">Warmth</div><div class="value">色温度</div></div>
-              <div class="vv-axis"><div class="label">Density</div><div class="value">密度</div></div>
-              <div class="vv-axis"><div class="label">Focus</div><div class="value">集中度</div></div>
-              <div class="vv-axis"><div class="label">Randomness</div><div class="value">無秩序さ</div></div>
-              <div class="vv-axis"><div class="label">Saturation</div><div class="value">彩度</div></div>
-              <div class="vv-axis"><div class="label">Verticality</div><div class="value">垂直性</div></div>
+              <div class="vv-axis">
+                <div class="label">Warmth</div>
+                <div class="value">色温度</div>
+              </div>
+              <div class="vv-axis">
+                <div class="label">Density</div>
+                <div class="value">密度</div>
+              </div>
+              <div class="vv-axis">
+                <div class="label">Focus</div>
+                <div class="value">集中度</div>
+              </div>
+              <div class="vv-axis">
+                <div class="label">Randomness</div>
+                <div class="value">無秩序さ</div>
+              </div>
+              <div class="vv-axis">
+                <div class="label">Saturation</div>
+                <div class="value">彩度</div>
+              </div>
+              <div class="vv-axis">
+                <div class="label">Verticality</div>
+                <div class="value">垂直性</div>
+              </div>
             </div>
             <p style="font-size:0.6em;color:var(--cyber-muted);margin-top:16px;line-height:1.5;">
               ボクセル配置から<span style="color:var(--cyber-text);font-weight:700;">決定的に算出</span>。各軸 0〜4。<br />
@@ -666,7 +710,7 @@
       <!-- ============================================ -->
       <!-- SLIDE 6: TECH POWER -->
       <!-- ============================================ -->
-      <section class="center-slide" data-background-color="#F8FAFB">
+      <section class="center-slide">
         <h2 style="text-align:center;margin-bottom:8px;">
           ハッカソン期間中に<span class="text-primary">やりきった</span>こと
         </h2>
@@ -707,7 +751,7 @@
       <!-- ============================================ -->
       <!-- SLIDE 7: TECH STACK -->
       <!-- ============================================ -->
-      <section data-background-color="#F8FAFB">
+      <section class="center-slide">
         <h2>技術スタック</h2>
 
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:40px;margin-top:20px;">
@@ -717,7 +761,7 @@
               <div style="display:flex;justify-content:space-between;align-items:center;">
                 <div>
                   <div class="mono" style="font-size:0.6em;color:var(--cyber-muted);">AI Director</div>
-                  <div style="font-size:0.9em;font-weight:700;">Gemini 2.5 Flash</div>
+                  <div style="font-size:0.9em;font-weight:700;">gemini-3-flash-preview</div>
                 </div>
                 <div style="font-size:0.6em;color:var(--cyber-muted);text-align:right;">JSON Schema<br />構造化出力</div>
               </div>
@@ -726,7 +770,7 @@
               <div style="display:flex;justify-content:space-between;align-items:center;">
                 <div>
                   <div class="mono" style="font-size:0.6em;color:var(--cyber-muted);">AI Judge</div>
-                  <div style="font-size:0.9em;font-weight:700;">Gemini 2.5 Flash Vision</div>
+                  <div style="font-size:0.9em;font-weight:700;">gemini-3-flash-preview</div>
                 </div>
                 <div style="font-size:0.6em;color:var(--cyber-muted);text-align:right;">Canvas画像<br />→ Vision解析</div>
               </div>
@@ -757,7 +801,7 @@
       <!-- ============================================ -->
       <!-- SLIDE 8: NPM PACKAGE -->
       <!-- ============================================ -->
-      <section data-background-color="#F8FAFB">
+      <section class="center-slide">
         <h2>
           <span class="mono text-primary">microvoxel-5</span>
         </h2>
@@ -773,7 +817,8 @@
                 <li style="font-size:0.8em;">ゼロ依存 / MIT ライセンス</li>
                 <li style="font-size:0.8em;">VibeVector算出 + Jaccard類似度</li>
                 <li style="font-size:0.8em;">LLM向け JSON Schema 同梱</li>
-                <li style="font-size:0.8em;"><span class="text-primary" style="font-weight:700;">誰でも npm install して使える</span></li>
+                <li style="font-size:0.8em;"><span class="text-primary" style="font-weight:700;">誰でも npm install
+                    して使える</span></li>
               </ul>
             </div>
           </div>
@@ -796,7 +841,7 @@
       <!-- ============================================ -->
       <!-- SLIDE 9: FUTURE -->
       <!-- ============================================ -->
-      <section data-background-color="#F8FAFB">
+      <section class="center-slide">
         <h2>
           <span class="text-accent">発展性</span>：スケールすると何が起きるか
         </h2>
@@ -818,7 +863,8 @@
           </div>
         </div>
 
-        <div class="card" style="margin-top:36px;max-width:700px;margin-left:auto;margin-right:auto;border-color:var(--cyber-accent);padding:28px 32px;text-align:center;">
+        <div class="card"
+          style="margin-top:36px;max-width:700px;margin-left:auto;margin-right:auto;border-color:var(--cyber-accent);padding:28px 32px;text-align:center;">
           <h3 style="font-size:0.9em;margin-bottom:10px;color:var(--cyber-accent);">夢の話</h3>
           <p style="font-size:0.75em;color:var(--cyber-text-sub);margin:0;line-height:1.7;">
             高解像度のボクセルで都市をモデリングすれば、<br />

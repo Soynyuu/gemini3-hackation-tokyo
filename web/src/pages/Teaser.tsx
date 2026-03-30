@@ -442,6 +442,8 @@ export default function Teaser() {
     return () => clearTimeout(t);
   }, []);
 
+  const NOISE_SVG = `data:image/svg+xml,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noiseFilter"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noiseFilter)"/%3E%3C/svg%3E`;
+
   const l = <T,>(v: { ja: T; en: T }): T => v[lang];
 
   return (
@@ -452,6 +454,10 @@ export default function Teaser() {
         {/* Grid background */}
         <div className="fixed inset-0 bg-[linear-gradient(to_right,theme('colors.cyber.border')_1px,transparent_1px),linear-gradient(to_bottom,theme('colors.cyber.border')_1px,transparent_1px)] bg-[size:32px_32px] opacity-[0.15] dark:opacity-[0.08] pointer-events-none" />
         <div className="fixed inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,theme('colors.cyber.primary')_0.2,transparent)] dark:bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,theme('colors.cyber.primary')_0.1,transparent)] opacity-20 dark:opacity-10 pointer-events-none" />
+        <div
+          className="fixed inset-0 opacity-[0.03] pointer-events-none"
+          style={{ backgroundImage: `url('${NOISE_SVG}')` }}
+        />
 
         {/* Hero */}
         <section className="relative min-h-screen flex flex-col items-center justify-center px-6">
@@ -459,28 +465,31 @@ export default function Teaser() {
             className={`text-center transition-all duration-1000 ${loaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
               }`}
           >
-            <div className="inline-block px-4 py-1.5 mb-8 rounded-full border border-cyber-border bg-cyber-surface/60 backdrop-blur-sm">
-              <span className="font-mono text-xs tracking-widest text-cyber-muted uppercase">
+            <div className="inline-block px-4 py-1.5 mb-10 rounded-full border border-cyber-primary/30 bg-cyber-surface/40 backdrop-blur-md shadow-[0_0_20px_rgba(255,107,0,0.1)]">
+              <span className="font-mono text-[10px] tracking-[0.25em] text-cyber-primary uppercase font-bold">
                 {l(TEXT.badge)}
               </span>
             </div>
 
-            <h1 className="text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-black tracking-tighter leading-[0.9] mb-6">
-              <span className="bg-gradient-to-r from-zinc-500 via-zinc-800 to-zinc-500 dark:from-zinc-300 dark:via-white dark:to-zinc-500 bg-clip-text text-transparent">
+            <h1 className="text-6xl sm:text-8xl md:text-9xl lg:text-[10rem] font-black tracking-tighter leading-[0.85] mb-8">
+              <span className="text-cyber-text dark:text-zinc-100 opacity-90 block">
                 VIBE
               </span>
-              <br />
               <GlitchText
                 text="ARCHITECT"
-                className="text-cyber-text dark:text-white"
+                className="bg-gradient-to-r from-cyber-primary via-orange-400 to-cyber-primary bg-clip-text text-transparent filter drop-shadow-[0_0_15px_rgba(255,107,0,0.4)]"
               />
             </h1>
 
-            <p className="max-w-lg mx-auto text-lg sm:text-xl text-cyber-muted leading-relaxed mb-8">
+            <div className="w-16 h-1 bg-cyber-primary/20 mx-auto mb-10" />
+
+            <p className="max-w-xl mx-auto text-xl sm:text-2xl text-cyber-muted leading-relaxed mb-12 font-medium">
               {TEXT.heroDesc[lang](<RoleRotator />)}
             </p>
 
-            <FlowDiagram />
+            <div className="p-1 border border-cyber-border/50 rounded-2xl bg-cyber-surface/30 backdrop-blur-sm inline-block shadow-2xl">
+              <FlowDiagram />
+            </div>
           </div>
 
           {/* Scroll indicator */}
@@ -579,26 +588,29 @@ export default function Teaser() {
         </section>
 
         {/* CTA */}
-        <section className="relative py-32 px-6">
+        <section className="relative py-48 px-6">
           <div className="max-w-2xl mx-auto text-center">
-            <h2 className="text-4xl sm:text-5xl font-black mb-6">{l(TEXT.ctaTitle)}</h2>
-            <p className="text-cyber-muted text-lg mb-12 whitespace-pre-line">{l(TEXT.ctaDesc)}</p>
+            <h2 className="text-5xl sm:text-6xl font-black mb-8 leading-tight">{l(TEXT.ctaTitle)}</h2>
+            <p className="text-cyber-muted text-xl mb-16 whitespace-pre-line leading-relaxed">{l(TEXT.ctaDesc)}</p>
 
             <a
               href="#/game"
-              className="group relative inline-flex items-center gap-3 px-12 py-5 bg-transparent font-bold text-cyber-text dark:text-white uppercase tracking-widest overflow-hidden rounded-md border border-cyber-border hover:border-cyber-primary transition-colors"
+              className="group relative inline-flex items-center gap-4 px-14 py-6 bg-cyber-primary font-black text-white uppercase tracking-[0.2em] overflow-hidden rounded-sm transition-all duration-300 hover:scale-105 hover:shadow-[0_0_30px_rgba(255,107,0,0.4)] shadow-xl"
             >
-              <div className="absolute inset-0 w-0 bg-cyber-primary transition-all duration-300 ease-out group-hover:w-full opacity-20" />
-              <span className="relative text-xl group-hover:text-cyber-primary transition-colors">
+              <div className="absolute inset-0 w-0 bg-white/20 transition-all duration-300 ease-out group-hover:w-full" />
+              <span className="relative text-xl">
                 {l(TEXT.ctaButton)}
               </span>
               <svg
-                width="20"
-                height="20"
-                viewBox="0 0 20 20"
-                className="relative text-cyber-primary transition-transform group-hover:translate-x-1"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                className="relative transition-transform group-hover:translate-x-1"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="3"
               >
-                <path d="M4 10 H14 M10 5 L15 10 L10 15" stroke="currentColor" strokeWidth="2" fill="none" />
+                <path d="M5 12h14M12 5l7 7-7 7" />
               </svg>
             </a>
           </div>

@@ -4,41 +4,25 @@
 
 @layer base {
   :root {
-    --background: 240 10% 98%;
-    /* #F8F9FA */
-    --surface: 0 0% 100%;
-    /* #FFFFFF */
-    --border: 214 32% 91%;
-    /* #E2E8F0 */
-    --primary: 25 100% 50%;
-    /* #FF6B00 */
-    --secondary: 240 5% 34%;
-    /* #52525B */
-    --accent: 192 91% 36%;
-    /* #0891B2 */
-    --text: 222 47% 11%;
-    /* #0F172A */
-    --muted: 215 16% 47%;
-    /* #64748B */
+    --background: 240 10% 98%; /* #F8F9FA */
+    --surface: 0 0% 100%; /* #FFFFFF */
+    --border: 214 32% 91%; /* #E2E8F0 */
+    --primary: 25 100% 50%; /* #FF6B00 - Tactical Orange */
+    --secondary: 240 5% 34%; /* #52525B - Zinc Grey */
+    --accent: 192 91% 36%; /* #0891B2 - Architectural Cyan */
+    --text: 222 47% 11%; /* #0F172A - Deep Charcoal */
+    --muted: 215 16% 47%; /* #64748B */
   }
 
   .dark {
-    --background: 240 10% 6%;
-    /* #0F0F12 */
-    --surface: 225 9% 11%;
-    /* #1A1B1F */
-    --border: 225 8% 17%;
-    /* #26282E */
-    --primary: 25 100% 50%;
-    /* #FF6B00 */
-    --secondary: 240 5% 34%;
-    /* #52525B */
-    --accent: 192 91% 36%;
-    /* #0891B2 */
-    --text: 210 20% 91%;
-    /* #E5E7EB */
-    --muted: 240 5% 26%;
-    /* #3F3F46 */
+    --background: 240 10% 6%; /* #0F0F12 */
+    --surface: 225 9% 11%; /* #1A1B1F - Tactical Surface */
+    --border: 225 8% 17%; /* #26282E */
+    --primary: 25 100% 50%; /* #FF6B00 */
+    --secondary: 240 5% 45%; /* #71717A - Zinc */
+    --accent: 192 91% 36%; /* #0891B2 */
+    --text: 210 20% 91%; /* #E5E7EB */
+    --muted: 240 5% 30%; /* #4B4B4B */
   }
 
   body {
